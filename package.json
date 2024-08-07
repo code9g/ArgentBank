@@ -1,0 +1,14 @@
+{
+  "name": "argentbank",
+  "version": "1.0.0",
+  "description": "Projet 13 de la formation \"Développeur JavaScript / React\" de OpenClassRoom",
+  "scripts": {
+    "back": "cd back && npm run dev:server",
+    "front": "cd front && npm run dev"
+  },
+  "author": {
+    "name": "Pierre HENRY",
+    "email": "pierre.henry@code99.fr"
+  },
+  "license": "ISC"
+}
