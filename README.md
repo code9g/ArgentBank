@@ -10,7 +10,7 @@
 ![JSdoc](https://img.shields.io/badge/jsdoc-006fbb?style=for-the-badge)
 ![BetterDocs](https://img.shields.io/badge/better--docs-008b64?style=for-the-badge)
 
-Projet 12 du parcours "**Développeur d'application - JavaScript React**" chez [OpenClassroom](https://openclassrooms.com/fr/).
+Projet 13 du parcours "**Développeur d'application - JavaScript React**" chez [OpenClassroom](https://openclassrooms.com/fr/).
 
 ## Description
 
