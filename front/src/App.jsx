@@ -4,7 +4,7 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import "./App.css";
+import "./App.scss";
 import Layout from "./layouts/Layout";
 import Error from "./pages/Error";
 import Home from "./pages/Home";
