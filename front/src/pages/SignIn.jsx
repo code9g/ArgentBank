@@ -53,28 +53,28 @@ function SignIn() {
   }
 
   return (
-    <main className="main bg-dark">
+    <>
       {state && (
         <State
-          message={`${
-            state === "connecting" ? "Connexion" : "Chargement"
-          } en cours...`}
+          message={state === "connecting" ? "Connecting..." : "Loading..."}
         />
       )}
-      <section className="sign-in-content">
-        <i className="fa fa-user-circle sign-in-icon"></i>
-        <h1>Sign In</h1>
-        <form onSubmit={handleSubmit}>
-          {error && <div className="sign-in-error">{error}</div>}
-          <InputText id="username" label="Username" type="text" />
-          <InputPassword id="password" label="Password" type="password" />
-          <InputCheckbox id="remember" label="Remember me" />
-          <button type="submit" className="sign-in-button">
-            Sign In
-          </button>
-        </form>
-      </section>
-    </main>
+      <main className="main bg-dark">
+        <section className="sign-in-content">
+          <i className="fa fa-user-circle sign-in-icon"></i>
+          <h1>Sign In</h1>
+          <form onSubmit={handleSubmit}>
+            {error && <div className="sign-in-error">{error}</div>}
+            <InputText id="username" label="Username" type="text" />
+            <InputPassword id="password" label="Password" type="password" />
+            <InputCheckbox id="remember" label="Remember me" />
+            <button type="submit" className="sign-in-button">
+              Sign In
+            </button>
+          </form>
+        </section>
+      </main>
+    </>
   );
 }
 
