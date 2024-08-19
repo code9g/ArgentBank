@@ -42,9 +42,11 @@ export const loginSlice = createSlice({
         localStorage.setItem("firstName", payload.firstName);
       }
     },
-
     loginUpdateFirstName: (state, { payload }) => {
       state.firstName = payload;
+      if (state.remember) {
+        localStorage.setItem("firstName", payload);
+      }
     },
 
     loginDisconnecting: (state) => {
