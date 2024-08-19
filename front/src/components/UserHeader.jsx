@@ -47,42 +47,23 @@ function UserHeader() {
           )}
         </h1>
         {isEditing ? (
-          <form
-            onSubmit={submit}
-            style={{ display: "flex", justifyContent: "center", gap: "1rem" }}
-          >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-                gap: "1rem",
-              }}
-            >
+          <form className="form-profile" onSubmit={submit}>
+            <div className="form-profile-grid">
               <input
                 id="firstName"
                 className="input-firstname"
                 type="text"
                 defaultValue={firstName}
               />
-              <button className="save-button" type="submit">
-                Save
-              </button>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: "1rem",
-              }}
-            >
               <input
                 id="lastName"
                 className="input-lastname"
                 type="text"
                 defaultValue={lastName}
               />
+              <button className="save-button" type="submit">
+                Save
+              </button>
               <button
                 className="cancel-button"
                 type="button"
@@ -91,7 +72,7 @@ function UserHeader() {
                 Cancel
               </button>
             </div>
-            {error && <div>{error}</div>}
+            {error && <div className="error">{error}</div>}
           </form>
         ) : (
           <button

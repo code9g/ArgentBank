@@ -288,6 +288,34 @@ body {
   min-width: 6rem;
 }
 
+.form-profile {
+  .error {
+    color: red;
+    padding: 1rem;
+
+    max-width: 1024px;
+    margin: 0 auto;
+  }
+}
+
+.form-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  justify-content: center;
+
+  max-width: 300px;
+  margin: 0 auto;
+  gap: 1rem;
+
+  > :nth-child(2n) {
+    justify-self: flex-start;
+  }
+
+  > :nth-child(2n + 1) {
+    justify-self: flex-end;
+  }
+}
+
 .header {
   color: #fff;
   margin-bottom: 2rem;
