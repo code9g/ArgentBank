@@ -1,29 +1,7 @@
 import Account from "../components/Account";
+import { accounts } from "../utils/consts";
 
 function User() {
-  const accounts = [
-    {
-      id: 1,
-      title: "Argent Bank Checking",
-      operations: 8_349,
-      amount: 2_082.79,
-      description: "Available Balance",
-    },
-    {
-      id: 2,
-      title: "Argent Bank Savings",
-      operations: 6_712,
-      amount: 10_928.42,
-      description: "Available Balance",
-    },
-    {
-      id: 3,
-      title: "Argent Bank Credit Card",
-      operations: 8_349,
-      amount: 184.3,
-      description: "Current Balance",
-    },
-  ];
   const firstName = "Jarvis";
   const lastName = "Tony";
 
