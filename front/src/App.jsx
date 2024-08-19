@@ -18,6 +18,7 @@ const routes = createRoutesFromElements(
       <Route index element={<Home />} />
       <Route path="sign-in" element={<SignIn />} />
       <Route path="user" element={<User />} />
+      <Route path="sign-out" element={<>Not yet implemented !</>} />
       <Route path="*" element={<NotFound />} />
     </Route>
   </Route>
