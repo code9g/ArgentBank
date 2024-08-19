@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import InputWrapper from "../components/InputWrapper";
 import Checkbox from "../components/Checkbox";
+import InputWrapper from "../components/InputWrapper";
 
 function SignIn() {
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ function SignIn() {
         <h1>Sign In</h1>
         <form onSubmit={handleSubmit}>
           <InputWrapper id="username" label="Username" type="text" />
-          <InputWrapper id="username" label="Password" type="password" />
+          <InputWrapper id="password" label="Password" type="password" />
           <Checkbox id="remember-me" label="Remember me" />
           <button type="submit" className="sign-in-button">
             Sign In
