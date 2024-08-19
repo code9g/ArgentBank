@@ -1,8 +1,8 @@
-import PropTypes from "prop-types";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { updateFirstName } from "../redux/slices/loginSlice";
 import { setAll } from "../redux/slices/profileSlice";
-import { fakeNetwork, updateUserProfile } from "../services/api";
+import { updateUserProfile } from "../services/api";
 import State from "./State";
 
 function UserHeader() {
@@ -24,8 +24,8 @@ function UserHeader() {
     setIsFetching(true);
     updateUserProfile({ firstName, lastName }, token)
       .then(async (data) => {
-        await fakeNetwork(3000, false);
-        dispatch({ type: setAll, payload: data.body });
+        dispatch(setAll(data.body));
+        dispatch(updateFirstName(data.body.firstName));
         setIsEditing(false);
         setError(null);
       })
@@ -112,8 +112,6 @@ function UserHeader() {
   );
 }
 
-UserHeader.propTypes = {
-  toggle: PropTypes.func.isRequired,
-};
+UserHeader.propTypes = {};
 
 export default UserHeader;

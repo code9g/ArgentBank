@@ -7,9 +7,7 @@ import InputText from "../components/forms/InputText";
 import State from "../components/State";
 import { signIn } from "../redux/slices/loginSlice";
 import { setAll } from "../redux/slices/profileSlice";
-import { fakeNetwork, getUserProfile, loginUser } from "../services/api";
-
-const fake = true;
+import { getUserProfile, loginUser } from "../services/api";
 
 function SignIn() {
   const [state, setState] = useState(null);
@@ -26,26 +24,23 @@ function SignIn() {
     const remember = e.target["remember"].checked;
 
     setState("connecting");
-    if (fake) await fakeNetwork(3000, false);
-
     loginUser(username, password)
       .then(async (data) => {
         const token = data.body.token;
-        dispatch({
-          type: signIn,
-          payload: { token, remember },
-        });
-
-        setState("loading");
-        if (fake) await fakeNetwork(3000, false);
-
-        return getUserProfile(token).then((data) => {
-          dispatch({ type: setAll, payload: data.body });
+        return getUserProfile(token).then((profileData) => {
+          dispatch(setAll(profileData.body));
+          dispatch(
+            signIn({
+              token,
+              firstName: profileData.body.firstName,
+              remember,
+            })
+          );
           navigate("/user");
         });
       })
       .catch(() => {
-        setError("Identifiant ou mot de passe non valide !");
+        setError("Username or password invalide !");
       })
       .finally(() => {
         setState(null);
@@ -54,11 +49,7 @@ function SignIn() {
 
   return (
     <>
-      {state && (
-        <State
-          message={state === "connecting" ? "Connecting..." : "Loading..."}
-        />
-      )}
+      {state && <State message={"Loading..."} />}
       <main className="main bg-dark">
         <section className="sign-in-content">
           <i className="fa fa-user-circle sign-in-icon"></i>

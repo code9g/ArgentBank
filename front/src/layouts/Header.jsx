@@ -5,9 +5,14 @@ import { signOut } from "../redux/slices/loginSlice";
 import { clear } from "../redux/slices/profileSlice";
 
 function Header() {
-  const { token } = useSelector((state) => state.login);
-  const { firstName } = useSelector((state) => state.profile);
+  const { token, firstName } = useSelector((state) => state.login);
   const dispatch = useDispatch();
+
+  const logout = (e) => {
+    e.preventDefault();
+    dispatch(signOut());
+    dispatch(clear());
+  };
 
   return (
     <nav className="main-nav">
@@ -25,15 +30,7 @@ function Header() {
           {token ? firstName : "Sign In"}
         </NavLink>
         {token && (
-          <Link
-            className="main-nav-item"
-            to="/sign-out"
-            onClick={(e) => {
-              e.preventDefault();
-              dispatch({ type: signOut });
-              dispatch({ type: clear });
-            }}
-          >
+          <Link className="main-nav-item" to="/sign-out" onClick={logout}>
             <i className="fa fa-sign-out"></i>
             Sign Out
           </Link>
