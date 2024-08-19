@@ -12,6 +12,4 @@ function Layout() {
   );
 }
 
-Layout.propTypes = {};
-
 export default Layout;
