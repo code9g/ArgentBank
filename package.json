@@ -10,5 +10,6 @@
     "name": "Pierre HENRY",
     "email": "pierre.henry@code99.fr"
   },
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {}
 }
