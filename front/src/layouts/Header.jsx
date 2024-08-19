@@ -1,9 +1,13 @@
+import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import logo from "../assets/img/argentBankLogo.png";
+import { signOut } from "../redux/slices/loginSlice";
+import { clear } from "../redux/slices/profileSlice";
 
 function Header() {
-  const isLogged = true;
-  const fullname = "Tony";
+  const { token } = useSelector((state) => state.login);
+  const { firstName } = useSelector((state) => state.profile);
+  const dispatch = useDispatch();
 
   return (
     <nav className="main-nav">
@@ -16,15 +20,23 @@ function Header() {
         <h1 className="sr-only">Argent Bank</h1>
       </Link>
       <div>
-        <NavLink className="main-nav-item" to={isLogged ? "/user" : "/sign-in"}>
+        <NavLink className="main-nav-item" to={token ? "/user" : "/sign-in"}>
           <i className="fa fa-user-circle"></i>
-          {isLogged ? fullname : "Sign In"}
+          {token ? firstName : "Sign In"}
         </NavLink>
-        {isLogged && (
-          <NavLink className="main-nav-item" to="/sign-out">
+        {token && (
+          <Link
+            className="main-nav-item"
+            to="/sign-out"
+            onClick={(e) => {
+              e.preventDefault();
+              dispatch({ type: signOut });
+              dispatch({ type: clear });
+            }}
+          >
             <i className="fa fa-sign-out"></i>
             Sign Out
-          </NavLink>
+          </Link>
         )}
       </div>
     </nav>

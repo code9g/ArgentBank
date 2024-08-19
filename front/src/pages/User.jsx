@@ -1,9 +1,15 @@
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 import Account from "../components/Account";
 import { accounts } from "../utils/consts";
 
 function User() {
-  const firstName = "Jarvis";
-  const lastName = "Tony";
+  const { token } = useSelector((state) => state.login);
+  const { firstName, lastName } = useSelector((state) => state.profile);
+
+  if (!token) {
+    return <Navigate to="/sign-in" />;
+  }
 
   return (
     <main className="main bg-dark">
@@ -11,7 +17,7 @@ function User() {
         <h1>
           Welcome back
           <br />
-          {lastName} {firstName}!
+          {firstName} {lastName} !
         </h1>
         <button className="edit-button">Edit Name</button>
       </div>
