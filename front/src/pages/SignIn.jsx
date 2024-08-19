@@ -1,55 +1,41 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import InputCheckbox from "../components/forms/InputCheckbox";
 import InputPassword from "../components/forms/InputPassword";
 import InputText from "../components/forms/InputText";
 import State from "../components/State";
-import { signIn } from "../redux/slices/loginSlice";
-import { setAll } from "../redux/slices/profileSlice";
-import { getUserProfile, loginUser } from "../services/api";
+import { signIn } from "../redux/actions";
+import { FETCHING_STATUS, SUCCESS_STATUS } from "../redux/slices/loginSlice";
 
 function SignIn() {
-  const [state, setState] = useState(null);
-  const [error, setError] = useState(null);
-
   const navigate = useNavigate();
+  const { status, error, token, firstName } = useSelector(
+    (state) => state.login
+  );
+
+  console.log("token:", token);
+  console.log("firstName:", firstName);
 
   const dispatch = useDispatch();
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const username = e.target["username"].value;
+    const email = e.target["username"].value;
     const password = e.target["password"].value;
     const remember = e.target["remember"].checked;
-
-    setState("connecting");
-    loginUser(username, password)
-      .then(async (data) => {
-        const token = data.body.token;
-        return getUserProfile(token).then((profileData) => {
-          dispatch(setAll(profileData.body));
-          dispatch(
-            signIn({
-              token,
-              firstName: profileData.body.firstName,
-              remember,
-            })
-          );
-          navigate("/user");
-        });
-      })
-      .catch(() => {
-        setError("Username or password invalide !");
-      })
-      .finally(() => {
-        setState(null);
-      });
+    dispatch(signIn({ email, password, remember }));
   }
+
+  useEffect(() => {
+    if (status === SUCCESS_STATUS) {
+      navigate("/user");
+    }
+  }, [status, navigate]);
 
   return (
     <>
-      {state && <State message={"Loading..."} />}
+      {status === FETCHING_STATUS && <State message="Connecting..." />}
       <main className="main bg-dark">
         <section className="sign-in-content">
           <i className="fa fa-user-circle sign-in-icon"></i>

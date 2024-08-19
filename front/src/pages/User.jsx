@@ -3,8 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import Account from "../components/Account";
 import UserHeader from "../components/UserHeader";
-import { setAll } from "../redux/slices/profileSlice";
-import { getUserProfile } from "../services/api";
+import { userLoad } from "../redux/actions";
 import { accounts } from "../utils/consts";
 
 function User() {
@@ -12,11 +11,7 @@ function User() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (token) {
-      getUserProfile(token).then((data) => {
-        dispatch(setAll(data.body));
-      });
-    }
+    dispatch(userLoad(token));
   }, [token, dispatch]);
 
   if (!token) {

@@ -1,17 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import logo from "../assets/img/argentBankLogo.png";
-import { signOut } from "../redux/slices/loginSlice";
-import { clear } from "../redux/slices/profileSlice";
+import { signOut } from "../redux/actions";
 
 function Header() {
   const { token, firstName } = useSelector((state) => state.login);
+
   const dispatch = useDispatch();
 
   const logout = (e) => {
     e.preventDefault();
     dispatch(signOut());
-    dispatch(clear());
   };
 
   return (

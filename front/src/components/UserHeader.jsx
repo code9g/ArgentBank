@@ -1,16 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateFirstName } from "../redux/slices/loginSlice";
-import { setAll } from "../redux/slices/profileSlice";
-import { updateUserProfile } from "../services/api";
+import { userUpdate } from "../redux/actions";
+import { FETCHING_STATUS, SUCCESS_STATUS } from "../redux/slices/loginSlice";
 import State from "./State";
 
 function UserHeader() {
-  const [isFetching, setIsFetching] = useState(false);
-  const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
 
-  const { firstName, lastName } = useSelector((state) => state.profile);
+  const {
+    status,
+    error,
+    user: { firstName, lastName },
+  } = useSelector((state) => state.profile);
 
   const { token } = useSelector((state) => state.login);
   const dispatch = useDispatch();
@@ -18,29 +19,23 @@ function UserHeader() {
   const submit = (e) => {
     e.preventDefault();
 
-    const firstName = e.target["firstName"].value;
-    const lastName = e.target["lastName"].value;
-
-    setIsFetching(true);
-    updateUserProfile({ firstName, lastName }, token)
-      .then(async (data) => {
-        dispatch(setAll(data.body));
-        dispatch(updateFirstName(data.body.firstName));
-        setIsEditing(false);
-        setError(null);
+    dispatch(
+      userUpdate(token, {
+        firstName: e.target["firstName"].value,
+        lastName: e.target["lastName"].value,
       })
-      .catch((error) => {
-        console.log(error);
-        setError(error.statusText);
-      })
-      .finally(() => {
-        setIsFetching(false);
-      });
+    );
   };
+
+  useEffect(() => {
+    if (status === SUCCESS_STATUS) {
+      setIsEditing(false);
+    }
+  }, [status]);
 
   return (
     <>
-      {isFetching && <State message="Updating..." />}
+      {status === FETCHING_STATUS && <State message="Updating..." />}
       <div className="header">
         <h1>
           Welcome back

@@ -1,6 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+export const PENDING_STATUS = "pending";
+export const FETCHING_STATUS = "fetching";
+export const SUCCESS_STATUS = "success";
+export const ERROR_STATUS = "error";
+export const DISCONNECTING_STATUS = "disconnecting";
+export const DISCONNECTED_STATUS = "disconnected";
+
 const initialState = {
+  status: PENDING_STATUS,
+  error: null,
+
   remember: false,
   token: null,
   firstName: null,
@@ -17,31 +27,53 @@ export const loginSlice = createSlice({
   name: "login",
   initialState,
   reducers: {
-    signIn: (state, { payload: { token, firstName, remember } }) => {
-      state.token = token;
-      state.remember = remember;
-      state.firstName = firstName;
-      if (remember) {
-        localStorage.setItem("token", token);
-        localStorage.setItem("firstName", firstName);
+    loginFetching: (state) => {
+      state.status = FETCHING_STATUS;
+    },
+
+    loginSuccess: (state, { payload }) => {
+      state.status = SUCCESS_STATUS;
+      state.error = null;
+      state.token = payload.token;
+      state.firstName = payload.firstName;
+      state.remember = payload.remember;
+      if (payload.remember) {
+        localStorage.setItem("token", payload.token);
+        localStorage.setItem("firstName", payload.firstName);
       }
     },
 
-    updateFirstName: (state, { payload }) => {
+    loginUpdateFirstName: (state, { payload }) => {
       state.firstName = payload;
     },
 
-    signOut: (state) => {
+    loginDisconnecting: (state) => {
+      state.status = DISCONNECTING_STATUS;
+    },
+
+    loginDisconnected: (state) => {
       localStorage.clear();
       state.token = null;
       state.remember = false;
-      state.firstName = null;
+      state.status = DISCONNECTED_STATUS;
+    },
+
+    loginError: (state, { payload: error }) => {
+      state.status = ERROR_STATUS;
+      state.error = error;
     },
   },
 });
 
 const { actions, reducer } = loginSlice;
 
-export const { signIn, updateFirstName, signOut } = actions;
+export const {
+  loginFetching,
+  loginSuccess,
+  loginDisconnecting,
+  loginDisconnected,
+  loginError,
+  loginUpdateFirstName,
+} = actions;
 
 export default reducer;
