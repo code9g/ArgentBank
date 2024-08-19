@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-function Checkbox({ id, label, required = false }) {
+function InputCheckbox({ id, label, required = false }) {
   return (
     <div className="input-checkbox">
       <input type="checkbox" id={id} required={required} />
@@ -9,10 +9,10 @@ function Checkbox({ id, label, required = false }) {
   );
 }
 
-Checkbox.propTypes = {
+InputCheckbox.propTypes = {
   id: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   required: PropTypes.bool,
 };
 
-export default Checkbox;
+export default InputCheckbox;

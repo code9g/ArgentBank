@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import Checkbox from "../components/Checkbox";
+import InputCheckbox from "../components/InputCheckbox";
 import InputWrapper from "../components/InputWrapper";
 
 function SignIn() {
@@ -7,6 +7,17 @@ function SignIn() {
 
   function handleSubmit(e) {
     e.preventDefault();
+    const username = e.target["username"].value;
+    const password = e.target["password"].value;
+    const remember = e.target["remember"].checked;
+    console.log(
+      "Username:",
+      username,
+      "Password:",
+      password,
+      "Remember:",
+      remember
+    );
     navigate("/user");
   }
 
@@ -18,7 +29,7 @@ function SignIn() {
         <form onSubmit={handleSubmit}>
           <InputWrapper id="username" label="Username" type="text" />
           <InputWrapper id="password" label="Password" type="password" />
-          <Checkbox id="remember-me" label="Remember me" />
+          <InputCheckbox id="remember" label="Remember me" />
           <button type="submit" className="sign-in-button">
             Sign In
           </button>
