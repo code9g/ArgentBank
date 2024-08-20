@@ -1,23 +1,4 @@
-/**
- * URL pour les requêtes à l'API de l'application
- *
- * @type {"http://localhost:3001/api/v1"}
- */
-export const API_URL = "http://localhost:3001/api/v1";
-
-/**
- * Point d'entrée pour authentifier un utilisateur auprès de l'API
- *
- * @type {"/user/login"}
- */
-export const LOGIN_ENDPOINT = "/user/login";
-
-/**
- * Point d'entrée pour lire ou modifier le profil d'un utilisateur authentifié
- *
- * @type {"/user/profile"}
- */
-export const PROFILE_ENDPOINT = "/user/profile";
+import { API_URL, LOGIN_ENDPOINT, PROFILE_ENDPOINT } from "../utils/consts";
 
 /**
  * Fonction générique d'interaction avec l'api

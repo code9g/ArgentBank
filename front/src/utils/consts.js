@@ -2,6 +2,32 @@ import iconChat from "../assets/img/icon-chat.png";
 import iconMoney from "../assets/img/icon-money.png";
 import iconSecurity from "../assets/img/icon-security.png";
 
+/**
+ * URL pour les requêtes à l'API de l'application
+ *
+ * @type {"http://localhost:3001/api/v1"}
+ */
+export const API_URL = "http://localhost:3001/api/v1";
+
+/**
+ * Point d'entrée pour authentifier un utilisateur auprès de l'API
+ *
+ * @type {"/user/login"}
+ */
+export const LOGIN_ENDPOINT = "/user/login";
+
+/**
+ * Point d'entrée pour lire ou modifier le profil d'un utilisateur authentifié
+ *
+ * @type {"/user/profile"}
+ */
+export const PROFILE_ENDPOINT = "/user/profile";
+
+/**
+ * Liste des "features" de la page d'accueil
+ *
+ * @type {Array<{title: string, icon:any, alt: string, description: string}>}
+ */
 export const features = [
   {
     title: "You are our #1 priority",
@@ -26,6 +52,12 @@ export const features = [
   },
 ];
 
+/**
+ * Liste des comptes d'un utilisateur, uniquement à des fins de démonstration
+ * et d'affichage
+ *
+ * @type {Array<{id: number, title: string, operations: number, amount: number, description: title}>}
+ */
 export const accounts = [
   {
     id: 1,
