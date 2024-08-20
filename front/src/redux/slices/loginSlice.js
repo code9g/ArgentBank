@@ -85,5 +85,3 @@ export const {
   loginDone,
   loginUpdateFirstName,
 } = actions;
-
-export default reducer;

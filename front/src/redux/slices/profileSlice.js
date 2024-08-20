@@ -87,5 +87,3 @@ export const {
   profileUpdate,
   profileClear,
 } = actions;
-
-export default reducer;
