@@ -45,7 +45,8 @@ body {
   white-space: nowrap !important; /* 3 */
 }
 
-.not-found {
+.not-found,
+.page-error {
   display: flex;
   justify-content: center;
   align-items: center;
