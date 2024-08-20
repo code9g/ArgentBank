@@ -4,6 +4,8 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./App.scss";
 import Layout from "./layouts/Layout";
 import Error from "./pages/Error";
@@ -28,7 +30,17 @@ const routes = createRoutesFromElements(
 const router = createBrowserRouter(routes, { basename: "/ArgentBank" });
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+      <ToastContainer
+        position="top-center"
+        pauseOnFocusLoss={false}
+        pauseOnHover={false}
+        autoClose={3000}
+      />
+    </>
+  );
 }
 
 export default App;

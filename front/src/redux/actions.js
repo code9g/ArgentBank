@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { getUserProfile, loginUser, updateUserProfile } from "../services/api";
 import {
   loginDisconnected,
@@ -36,12 +37,14 @@ export const signIn =
           dispatch(
             loginSuccess({ token, firstName: data.firstName, remember })
           );
+          toast.success("You are successfully connected");
           return data;
         });
       })
       .catch((error) => {
         if (error.status === 400) {
           dispatch(loginError("Invalid username or password !"));
+          toast.error("Invalid username or password !");
         } else {
           dispatch(loginError(error.statusText || error.message));
         }
@@ -57,6 +60,7 @@ export const signIn =
 export const signOut = () => async (dispatch) => {
   dispatch(loginDisconnected());
   dispatch(profileClear());
+  toast.success("You are logged out");
 };
 
 /**
@@ -80,6 +84,7 @@ const userLayout = async (dispatch, api, ...args) => {
     .catch((error) => {
       // TODO: En cas d'erreur "401 - Unauthorized", faudrait-il déconnecter l'utilisateur ?
       dispatch(profileError(error.statusText || error.message));
+      toast.error(error.statusText || error.message);
     })
     .finally(() => {
       dispatch(profileDone());
@@ -107,4 +112,7 @@ export const userLoad = (token) => async (dispatch) =>
  * @returns {(dispatch: any) => unknown}
  */
 export const userUpdate = (token, profile) => async (dispatch) =>
-  userLayout(dispatch, updateUserProfile, token, profile);
+  userLayout(dispatch, updateUserProfile, token, profile).then((data) => {
+    toast.success("Your profile has been successfully updated");
+    return data;
+  });
