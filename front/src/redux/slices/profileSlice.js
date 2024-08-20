@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  isFetching: false,
   status: null,
   error: null,
 
@@ -19,11 +20,10 @@ export const profileSlice = createSlice({
   initialState,
   reducers: {
     profileFetching: (state) => {
-      state.status = "fetching";
+      state.isFetching = true;
     },
 
     profileSuccess: (state, { payload }) => {
-      state.status = "success";
       state.error = null;
 
       state.user.id = payload.id;
@@ -35,7 +35,6 @@ export const profileSlice = createSlice({
     },
 
     profileError: (state, { payload }) => {
-      state.status = "error";
       state.error = payload;
     },
 
@@ -48,8 +47,11 @@ export const profileSlice = createSlice({
       state.user.lastName = payload.lastName;
     },
 
+    profileDone: (state) => {
+      state.isFetching = false;
+    },
+
     profileClear: (state) => {
-      state.status = "pending";
       state.error = null;
       state.user.id = null;
       state.user.createdAt = null;
@@ -66,6 +68,7 @@ export const {
   profileFetching,
   profileSuccess,
   profileError,
+  profileDone,
   profileUpdate,
   profileClear,
 } = actions;

@@ -1,22 +1,13 @@
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import InputCheckbox from "../components/forms/InputCheckbox";
 import InputPassword from "../components/forms/InputPassword";
 import InputText from "../components/forms/InputText";
 import State from "../components/State";
 import { signIn } from "../redux/actions";
-import { FETCHING_STATUS, SUCCESS_STATUS } from "../redux/slices/loginSlice";
 
 function SignIn() {
-  const navigate = useNavigate();
-  const { status, error, token, firstName } = useSelector(
-    (state) => state.login
-  );
-
-  console.log("token:", token);
-  console.log("firstName:", firstName);
-
+  const { token, isFetching, error } = useSelector((state) => state.login);
   const dispatch = useDispatch();
 
   async function handleSubmit(e) {
@@ -27,15 +18,13 @@ function SignIn() {
     dispatch(signIn({ email, password, remember }));
   }
 
-  useEffect(() => {
-    if (status === SUCCESS_STATUS) {
-      navigate("/user");
-    }
-  }, [status, navigate]);
+  if (token) {
+    return <Navigate to="/user" />;
+  }
 
   return (
     <>
-      {status === FETCHING_STATUS && <State message="Connecting..." />}
+      {isFetching && <State message="Connecting..." />}
       <main className="main bg-dark">
         <section className="sign-in-content">
           <i className="fa fa-user-circle sign-in-icon"></i>

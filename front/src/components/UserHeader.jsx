@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userUpdate } from "../redux/actions";
-import { FETCHING_STATUS, SUCCESS_STATUS } from "../redux/slices/loginSlice";
 import State from "./State";
 
 function UserHeader() {
   const [isEditing, setIsEditing] = useState(false);
 
   const {
-    status,
+    isFetching,
     error,
     user: { firstName, lastName },
   } = useSelector((state) => state.profile);
@@ -28,14 +27,12 @@ function UserHeader() {
   };
 
   useEffect(() => {
-    if (status === SUCCESS_STATUS) {
-      setIsEditing(false);
-    }
-  }, [status]);
+    setIsEditing(false);
+  }, [isFetching]);
 
   return (
     <>
-      {status === FETCHING_STATUS && <State message="Updating..." />}
+      {isFetching && <State message="Updating..." />}
       <div className="header">
         <h1>
           Welcome back

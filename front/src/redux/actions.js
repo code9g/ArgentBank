@@ -1,6 +1,7 @@
 import { getUserProfile, loginUser, updateUserProfile } from "../services/api";
 import {
   loginDisconnected,
+  loginDone,
   loginError,
   loginFetching,
   loginSuccess,
@@ -8,6 +9,7 @@ import {
 } from "./slices/loginSlice";
 import {
   profileClear,
+  profileDone,
   profileError,
   profileFetching,
   profileSuccess,
@@ -19,7 +21,6 @@ export const signIn =
     dispatch(loginFetching());
     loginUser(email, password)
       .then((data) => {
-        console.log(data);
         const token = data.body.token;
         dispatch(profileFetching());
         return getUserProfile(token)
@@ -35,13 +36,13 @@ export const signIn =
           });
       })
       .catch((error) => {
-        console.log(email);
         if (error.status === 400) {
           dispatch(loginError("Invalid username or password !"));
         } else {
           dispatch(loginError(error.statusText || error.message));
         }
-      });
+      })
+      .finally(() => dispatch(loginDone()));
   };
 
 export const signOut = () => async (dispatch) => {
@@ -59,6 +60,9 @@ export const userLoad = (token) => async (dispatch) => {
     })
     .catch((error) => {
       dispatch(profileError(error.statusText || error.message));
+    })
+    .finally(() => {
+      dispatch(profileDone());
     });
 };
 
@@ -73,5 +77,8 @@ export const userUpdate =
       })
       .catch((error) => {
         dispatch(profileError(error.statusText || error.message));
+      })
+      .finally(() => {
+        dispatch(profileDone());
       });
   };

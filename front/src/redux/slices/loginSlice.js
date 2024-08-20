@@ -1,14 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const PENDING_STATUS = "pending";
-export const FETCHING_STATUS = "fetching";
-export const SUCCESS_STATUS = "success";
-export const ERROR_STATUS = "error";
-export const DISCONNECTING_STATUS = "disconnecting";
-export const DISCONNECTED_STATUS = "disconnected";
-
 const initialState = {
-  status: PENDING_STATUS,
+  isFetching: false,
   error: null,
 
   remember: false,
@@ -28,11 +21,10 @@ export const loginSlice = createSlice({
   initialState,
   reducers: {
     loginFetching: (state) => {
-      state.status = FETCHING_STATUS;
+      state.isFetching = true;
     },
 
     loginSuccess: (state, { payload }) => {
-      state.status = SUCCESS_STATUS;
       state.error = null;
       state.token = payload.token;
       state.firstName = payload.firstName;
@@ -42,27 +34,26 @@ export const loginSlice = createSlice({
         localStorage.setItem("firstName", payload.firstName);
       }
     },
-    loginUpdateFirstName: (state, { payload }) => {
-      state.firstName = payload;
-      if (state.remember) {
-        localStorage.setItem("firstName", payload);
-      }
-    },
-
-    loginDisconnecting: (state) => {
-      state.status = DISCONNECTING_STATUS;
-    },
 
     loginDisconnected: (state) => {
       localStorage.clear();
       state.token = null;
       state.remember = false;
-      state.status = DISCONNECTED_STATUS;
     },
 
     loginError: (state, { payload: error }) => {
-      state.status = ERROR_STATUS;
       state.error = error;
+    },
+
+    loginDone: (state) => {
+      state.isFetching = false;
+    },
+
+    loginUpdateFirstName: (state, { payload }) => {
+      state.firstName = payload;
+      if (state.remember) {
+        localStorage.setItem("firstName", payload);
+      }
     },
   },
 });
@@ -75,6 +66,7 @@ export const {
   loginDisconnecting,
   loginDisconnected,
   loginError,
+  loginDone,
   loginUpdateFirstName,
 } = actions;
 
