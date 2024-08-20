@@ -1,17 +1,9 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import logo from "../assets/img/argentBankLogo.png";
-import { signOut } from "../redux/actions";
 
 function Header() {
   const { token, firstName } = useSelector((state) => state.login);
-
-  const dispatch = useDispatch();
-
-  const logout = (e) => {
-    e.preventDefault();
-    dispatch(signOut());
-  };
 
   return (
     <nav className="main-nav">
@@ -29,7 +21,7 @@ function Header() {
           {token ? firstName : "Sign In"}
         </NavLink>
         {token && (
-          <Link className="main-nav-item" to="/sign-out" onClick={logout}>
+          <Link className="main-nav-item" to="/sign-out">
             <i className="fa fa-sign-out"></i>
             Sign Out
           </Link>
