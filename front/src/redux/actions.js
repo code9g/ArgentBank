@@ -107,4 +107,4 @@ export const userLoad = (token) => async (dispatch) =>
  * @returns {(dispatch: any) => unknown}
  */
 export const userUpdate = (token, profile) => async (dispatch) =>
-  userLayout(dispatch, updateUserProfile, profile, token);
+  userLayout(dispatch, updateUserProfile, token, profile);
