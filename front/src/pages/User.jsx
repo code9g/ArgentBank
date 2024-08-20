@@ -11,7 +11,9 @@ function User() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(userLoad(token));
+    if (token) {
+      dispatch(userLoad(token));
+    }
   }, [token, dispatch]);
 
   if (!token) {
