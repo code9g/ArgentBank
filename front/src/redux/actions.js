@@ -47,6 +47,7 @@ export const signIn =
           toast.error("Invalid username or password !");
         } else {
           dispatch(loginError(error.statusText || error.message));
+          toast.error(error.statusText || error.message);
         }
       })
       .finally(() => dispatch(loginDone()));
