@@ -33,6 +33,9 @@ export const signIn =
           .catch((error) => {
             dispatch(profileError("Fetching data error..."));
             throw error;
+          })
+          .finally(() => {
+            dispatch(profileDone());
           });
       })
       .catch((error) => {
