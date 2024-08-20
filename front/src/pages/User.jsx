@@ -6,6 +6,8 @@ import UserHeader from "../components/UserHeader";
 import { userLoad } from "../redux/actions";
 import { accounts } from "../utils/consts";
 
+const INTERVAL_USER_DATA_REFRESH = 5 * 60 * 1000;
+
 function User() {
   const { token } = useSelector((state) => state.login);
   const dispatch = useDispatch();
@@ -13,6 +15,11 @@ function User() {
   useEffect(() => {
     if (token) {
       dispatch(userLoad(token));
+      const handle = setInterval(
+        () => dispatch(userLoad(token)),
+        INTERVAL_USER_DATA_REFRESH
+      );
+      return () => clearInterval(handle);
     }
   }, [token, dispatch]);
 
