@@ -11,12 +11,14 @@ const fetcher = async (endpoint, content, options) =>
       Authorization: options.token ? `Bearer ${options.token}` : null,
     },
     body: content ? JSON.stringify(content) : null,
-  }).then((response) => {
-    if (response.status === 200) {
-      return response.json();
-    }
-    throw response;
-  });
+  })
+    .then((response) => {
+      if (response.status === 200) {
+        return response.json();
+      }
+      throw response;
+    })
+    .then((data) => data.body);
 
 export const getUserProfile = (token) =>
   fetcher(PROFILE_ENDPOINT, null, { method: "POST", token });

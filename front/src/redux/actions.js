@@ -20,23 +20,14 @@ export const signIn =
   async (dispatch) => {
     dispatch(loginFetching());
     loginUser(email, password)
-      .then((data) => {
-        const token = data.body.token;
-        dispatch(profileFetching());
-        return getUserProfile(token)
-          .then((data) => {
-            dispatch(profileSuccess(data.body));
-            dispatch(
-              loginSuccess({ token, firstName: data.body.firstName, remember })
-            );
-          })
-          .catch((error) => {
-            dispatch(profileError("Fetching data error..."));
-            throw error;
-          })
-          .finally(() => {
-            dispatch(profileDone());
-          });
+      .then(async (data) => {
+        const token = data.token;
+        return userLayout(dispatch, getUserProfile, token).then((data) => {
+          dispatch(
+            loginSuccess({ token, firstName: data.firstName, remember })
+          );
+          return data;
+        });
       })
       .catch((error) => {
         if (error.status === 400) {
@@ -55,10 +46,11 @@ export const signOut = () => async (dispatch) => {
 
 const userLayout = async (dispatch, api, ...args) => {
   dispatch(profileFetching());
-  api(...args)
+  return api(...args)
     .then((data) => {
-      dispatch(profileSuccess(data.body));
-      dispatch(loginUpdateFirstName(data.body.firstName));
+      dispatch(profileSuccess(data));
+      dispatch(loginUpdateFirstName(data.firstName));
+      return data;
     })
     .catch((error) => {
       // TODO: En cas d'erreur "401 - Unauthorized", faudrait-il déconnecter l'utilisateur ?

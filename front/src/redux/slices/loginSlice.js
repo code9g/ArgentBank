@@ -27,17 +27,16 @@ export const loginSlice = createSlice({
     loginSuccess: (state, { payload }) => {
       state.error = null;
       state.token = payload.token;
-      state.firstName = payload.firstName;
       state.remember = payload.remember;
       if (payload.remember) {
         localStorage.setItem("token", payload.token);
-        localStorage.setItem("firstName", payload.firstName);
       }
     },
 
     loginDisconnected: (state) => {
       localStorage.clear();
       state.token = null;
+      state.firstName = null;
       state.remember = false;
     },
 
