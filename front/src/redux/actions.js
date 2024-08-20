@@ -46,19 +46,19 @@ export const signIn =
   };
 
 export const signOut = () => async (dispatch) => {
-  // dispatch(loginDisconnecting());
   dispatch(loginDisconnected());
   dispatch(profileClear());
 };
 
-export const userLoad = (token) => async (dispatch) => {
+const userLayout = async (dispatch, api, ...args) => {
   dispatch(profileFetching());
-  getUserProfile(token)
+  api(...args)
     .then((data) => {
       dispatch(profileSuccess(data.body));
       dispatch(loginUpdateFirstName(data.body.firstName));
     })
     .catch((error) => {
+      // TODO: En cas d'erreur "401 - Unauthorized", faudrait-il déconnecter l'utilisateur ?
       dispatch(profileError(error.statusText || error.message));
     })
     .finally(() => {
@@ -66,19 +66,8 @@ export const userLoad = (token) => async (dispatch) => {
     });
 };
 
-export const userUpdate =
-  (token, { firstName, lastName }) =>
-  async (dispatch) => {
-    dispatch(profileFetching());
-    updateUserProfile({ firstName, lastName }, token)
-      .then((data) => {
-        dispatch(profileSuccess(data.body));
-        dispatch(loginUpdateFirstName(data.body.firstName));
-      })
-      .catch((error) => {
-        dispatch(profileError(error.statusText || error.message));
-      })
-      .finally(() => {
-        dispatch(profileDone());
-      });
-  };
+export const userLoad = (token) => async (dispatch) =>
+  userLayout(dispatch, getUserProfile, token);
+
+export const userUpdate = (token, profile) => async (dispatch) =>
+  userLayout(dispatch, updateUserProfile, profile, token);
