@@ -7,14 +7,6 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  height: 100%;
-}
-
-html,
-body,
-#root,
-main {
-  height: 100%;
 }
 
 body {
@@ -65,24 +57,24 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 5px 20px;
-}
 
-.main-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+  a {
+    font-weight: bold;
+    color: #2c3e50;
 
-.main-nav a.router-link-exact-active {
-  color: #42b983;
+    &.active {
+      color: #42b983;
+    }
+  }
 }
 
 .main-nav-item {
   text-decoration: none;
   margin-right: 0.5rem;
-}
 
-.main-nav-item:hover {
-  text-decoration: underline;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .main-nav-logo {
@@ -102,6 +94,11 @@ body {
   background-repeat: no-repeat;
   height: 300px;
   position: relative;
+
+  @media (min-width: 920px) {
+    height: 400px;
+    background-position: 0% 33%;
+  }
 }
 
 .hero-content {
@@ -112,39 +109,32 @@ body {
   padding: 2rem;
   text-align: left;
   margin: 0 auto;
-}
 
-.hero-content .subtitle {
-  font-weight: bold;
-  font-size: 1rem;
-  margin: 0;
-}
-
-.hero-content .text {
-  margin-bottom: 0;
-  font-size: 0.9rem;
-}
-
-@media (min-width: 920px) {
-  .hero {
-    height: 400px;
-    background-position: 0% 33%;
+  .subtitle {
+    font-weight: bold;
+    font-size: 1rem;
+    margin: 0;
   }
 
-  .hero-content {
+  .text {
+    margin-bottom: 0;
+    font-size: 0.9rem;
+  }
+
+  @media (min-width: 920px) {
     position: absolute;
     top: 50px;
     right: 50px;
     width: 300px;
     margin: 2rem;
-  }
 
-  .hero-content .subtitle {
-    font-size: 1.5rem;
-  }
+    .subtitle {
+      font-size: 1.5rem;
+    }
 
-  .hero-content .text {
-    font-size: 1.2rem;
+    .text {
+      font-size: 1.2rem;
+    }
   }
 }
 
@@ -194,8 +184,7 @@ body {
   box-sizing: border-box;
   background-color: white;
   width: 300px;
-  margin: 0 auto;
-  margin-top: 3rem;
+  margin: 3rem auto 3rem;
   padding: 2rem;
 }
 
@@ -294,14 +283,18 @@ body {
 .input-lastname {
   padding: 5px;
   font-size: 1.2rem;
-  color: $primary-color;
+  width: 100%;
+
+  &::placeholder {
+    color: #12002b80;
+  }
 }
 
 .save-button,
 .cancel-button {
   border-color: $primary-color;
-  background-color: #fff;
-  color: $primary-color;
+  background-color: $primary-color;
+  color: #fff;
   font-weight: bold;
   padding: 10px;
   min-width: 6rem;
@@ -337,6 +330,8 @@ body {
 
 .header {
   color: #fff;
+  width: 80%;
+  margin: 0 auto;
   margin-bottom: 2rem;
 }
 

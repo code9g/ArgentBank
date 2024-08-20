@@ -51,13 +51,17 @@ function UserHeader() {
                 id="firstName"
                 className="input-firstname"
                 type="text"
-                defaultValue={firstName}
+                placeholder={firstName}
+                minLength={2}
+                required
               />
               <input
                 id="lastName"
                 className="input-lastname"
                 type="text"
-                defaultValue={lastName}
+                placeholder={lastName}
+                minLength={2}
+                required
               />
               <button className="save-button" type="submit">
                 Save
