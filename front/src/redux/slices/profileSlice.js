@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+/**
+ * Données initiales de l'état de connexion (profileSlice)
+ *
+ * @type {{ isFetching: boolean; error: string | null; user: {id: string?, createdAt: string?, updatedAt: string?, email: string?, firstName: string?, lastName: string?}}}
+ */
 const initialState = {
   isFetching: false,
   error: null,
@@ -14,6 +19,11 @@ const initialState = {
   },
 };
 
+/**
+ * Gestionnaire d'état du profil d'un utilisateur authentifié
+ *
+ * @type {Slice}
+ */
 export const profileSlice = createSlice({
   name: "profile",
   initialState,
@@ -62,7 +72,13 @@ export const profileSlice = createSlice({
   },
 });
 
-const { actions, reducer } = profileSlice;
+export const { actions, reducer } = profileSlice;
+
+/**
+ * Exportation des actions pour le dispatch de ce slice
+ *
+ * @type {ActionCreator}
+ */
 export const {
   profileFetching,
   profileSuccess,

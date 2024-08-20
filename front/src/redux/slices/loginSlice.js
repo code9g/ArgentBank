@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+/**
+ * Données initiales de l'état de connexion (loginSlice)
+ *
+ * @type {{ isFetching: boolean; error: string | null; remember: boolean; token: string | null; firstName: string | null; }}
+ */
 const initialState = {
   isFetching: false,
   error: null,
@@ -9,6 +14,8 @@ const initialState = {
   firstName: null,
 };
 
+// Chargement des données depuis localstorage si elles existent
+// (situation où l'utilisateur a opté pour "Remember me")
 const token = localStorage.getItem("token");
 if (token) {
   initialState.remember = true;
@@ -16,6 +23,11 @@ if (token) {
   initialState.firstName = localStorage.getItem("firstName");
 }
 
+/**
+ * Gestionnaire d'état de connexion d'un utilisateur
+ *
+ * @type {Slice}
+ */
 export const loginSlice = createSlice({
   name: "login",
   initialState,
@@ -57,8 +69,13 @@ export const loginSlice = createSlice({
   },
 });
 
-const { actions, reducer } = loginSlice;
+export const { actions, reducer } = loginSlice;
 
+/**
+ * Exportation des actions pour le dispatch de ce slice
+ *
+ * @type {ActionCreator}
+ */
 export const {
   loginFetching,
   loginSuccess,
