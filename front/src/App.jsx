@@ -21,7 +21,7 @@ const routes = createRoutesFromElements(
     <Route errorElement={<Error />}>
       <Route index element={<Home />} />
       <Route path="sign-in" element={<SignIn />} />
-      <Route path="user" element={<PrivateRoute />}>
+      <Route path="user" element={<PrivateRoute to="/sign-in" />}>
         <Route index element={<User />} />
       </Route>
       <Route path="sign-out" element={<SignOut />} />
