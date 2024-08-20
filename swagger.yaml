@@ -12,7 +12,7 @@ paths:
   /user/login:
     post:
       tags:
-        - User Module
+        - User module
       summary: Login
       description: API for Login
       parameters:
@@ -36,7 +36,7 @@ paths:
   /user/signup:
     post:
       tags:
-        - User Module
+        - User module
       summary: Signup
       description: API for Signup
       parameters:
@@ -45,14 +45,14 @@ paths:
           description: Signup Payload
           required: true
           schema:
-            $ref: "#/definitions/User"
+            $ref: "#/definitions/Signup"
       produces:
         - application/json
       responses:
         "200":
           description: Signup Successfully
           schema:
-            $ref: "#/definitions/ApiResponse"
+            $ref: "#/definitions/ProfileResponse"
         "400":
           description: Invalid Fields
         "500":
@@ -62,9 +62,9 @@ paths:
       security:
         - Bearer: []
       tags:
-        - User Module
-      summary: User Profile API
-      description: API for fetching a user profile
+        - User module
+      summary: Get an user profile
+      description: API returns a profile for an authenticated user
       parameters:
         - in: header
           type: string
@@ -77,7 +77,7 @@ paths:
         "200":
           description: User profile retrieved successully
           schema:
-            $ref: "#/definitions/ApiResponse"
+            $ref: "#/definitions/ProfileResponse"
         "400":
           description: Invalid Fields
         "500":
@@ -86,9 +86,9 @@ paths:
       security:
         - Bearer: []
       tags:
-        - User Module
-      summary: User Profile API
-      description: API for updating a user profile
+        - User module
+      summary: Update the firstname and lastname fields of a profil
+      description: API for update the firstname and lastname fields of an authenticated user's profil
       parameters:
         - in: header
           type: string
@@ -100,16 +100,201 @@ paths:
           description: Update user profile attributes
           required: true
           schema:
-            $ref: "#/definitions/UserProfile"
+            $ref: "#/definitions/ProfileUpdate"
       produces:
         - application/json
       responses:
         "200":
           description: User profile retrieved successully
           schema:
-            $ref: "#/definitions/ApiResponse"
+            $ref: "#/definitions/ProfileResponse"
         "400":
           description: Invalid Fields
+        "500":
+          description: Internal Server Error
+  /accounts:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Accounts module
+      summary: Get all accounts
+      description: API for returns all acounts for an authenticated user
+      parameters:
+        - in: header
+          type: string
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Accounts successfully retrieved
+          schema:
+            $ref: "#/definitions/AccountsResponse"
+        "401":
+          description: Authorization error
+        "500":
+          description: Internal Server Error
+  /accounts/{accountId}:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Accounts module
+      summary: Get an account
+      description: API for returns an account for an authenticated user
+      parameters:
+        - in: path
+          name: accountId
+          description: Account id
+          required: true
+          type: string
+        - in: header
+          type: string
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Account successfully retrieved
+          schema:
+            $ref: "#/definitions/AccountResponse"
+        "401":
+          description: Authorization error
+        "404":
+          description: Account not found
+        "500":
+          description: Internal Server Error
+  /accounts/{accountId}/transactions:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Accounts module
+      summary: Get all transactions of an account
+      description: API for returns all transactions for an authenticated user's account
+      parameters:
+        - in: path
+          name: accountId
+          description: Account id
+          required: true
+          type: string
+        - in: header
+          type: string
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: User account transactions successfully retrieved
+          schema:
+            $ref: "#/definitions/TransactionsResponse"
+        "401":
+          description: Authorization error
+        "404":
+          description: Account not found
+        "500":
+          description: Internal Server Error
+  /transactions:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions module
+      summary: Get all transactions
+      description: API for returns all transactions of an authenticated user
+      parameters:
+        - in: header
+          type: string
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Transactions successfully retrieved
+          schema:
+            $ref: "#/definitions/TransactionsResponse"
+        "401":
+          description: Authorization error
+        "500":
+          description: Internal Server Error
+  /transactions/{transactionId}:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions module
+      summary: Get a transaction
+      description: API for returns a transaction of an authenticated user
+      parameters:
+        - in: path
+          name: transactionId
+          description: Transaction id
+          required: true
+          type: string
+        - in: header
+          type: string
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Transaction successfully retrieved
+          schema:
+            $ref: "#/definitions/TransactionResponse"
+        "401":
+          description: Authorization error
+        "404":
+          description: Transaction not found
+        "500":
+          description: Internal Server Error
+    patch:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions module
+      summary: Update the category and notes fields of a transaction
+      description: API for updates the category and notes fields of an authenticated user's transaction
+      parameters:
+        - in: path
+          name: transactionId
+          description: Transaction id
+          required: true
+          type: string
+        - in: header
+          type: string
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+        - in: body
+          name: body
+          description: Category and notes fields to update
+          required: true
+          schema:
+            $ref: "#/definitions/TransactionUpdate"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Transaction successfully updated
+          schema:
+            $ref: "#/definitions/TransactionResponse"
+        "400":
+          description: Invalid fields
+        "401":
+          description: Authorization error
+        "404":
+          description: Transaction not found
         "500":
           description: Internal Server Error
 securityDefinitions:
@@ -118,56 +303,27 @@ securityDefinitions:
     name: Authorization
     in: header
 definitions:
-  User:
-    properties:
-      email:
-        type: string
-        description: user email
-      password:
-        type: string
-        description: user password
-      firstName:
-        type: string
-        description: user first name
-      lastName:
-        type: string
-        description: user last name
-  Login:
-    properties:
-      email:
-        type: string
-        description: user email
-      password:
-        type: string
-        description: user password
-  ApiResponse:
+  Error:
     type: object
     properties:
       status:
         type: integer
       message:
         type: string
-      body:
-        type: object
-        properties:
-          id:
-            type: string
-            description: user id
-          createdAt:
-            type: string
-            description: user created at
-          updatedAt:
-            type: string
-            description: user updated at
-          email:
-            type: string
-            description: user email
-          firstName:
-            type: string
-            description: user firstname
-          lastName:
-            type: string
-            description: user lastname
+    required:
+      - status
+      - message
+  Login:
+    type: object
+    properties:
+      email:
+        type: string
+        format: email
+        description: user email
+      password:
+        type: string
+        format: password
+        description: user password
   LoginResponse:
     type: object
     properties:
@@ -181,10 +337,159 @@ definitions:
           token:
             type: string
             description: JWT token
-  UserProfile:
+  Signup:
+    properties:
+      email:
+        type: string
+        description: user email
+      password:
+        type: string
+        description: user password
+      firstName:
+        type: string
+        description: user first name
+      lastName:
+        type: string
+        description: user last name
+  Profile:
+    type: object
+    properties:
+      id:
+        type: string
+        description: user id
+      createdAt:
+        type: string
+        format: date-time
+        description: user created at
+      updatedAt:
+        type: string
+        format: date-time
+        description: user updated at
+      email:
+        type: string
+        format: email
+        description: user email
+      firstName:
+        type: string
+        description: user firstname
+      lastName:
+        type: string
+        description: user lastname
+  ProfileUpdate:
     type: object
     properties:
       firstName:
         type: string
       lastName:
         type: string
+  ProfileResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+      message:
+        type: string
+      body:
+        $ref: "#/definitions/Profile"
+  Account:
+    type: object
+    properties:
+      id:
+        type: string
+        description: account id
+      userId:
+        type: string
+        description: user id
+      name:
+        type: string
+        description: account name
+      description:
+        type: string
+        description: account description
+      amount:
+        type: integer
+        format: currency
+        description: account amount
+      balance:
+        type: integer
+        format: currency
+        description: account balance
+      transactions:
+        type: integer
+        format: int64
+        description: account transactions counter
+  AccountResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+      message:
+        type: string
+      body:
+        $ref: "#/definitions/Account"
+  Accounts:
+    type: array
+    items:
+      $ref: "#/definitions/Account"
+  AccountsResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+      message:
+        type: string
+      body:
+        $ref: "#/definitions/Accounts"
+  Transaction:
+    type: object
+    properties:
+      id:
+        type: string
+      accountId:
+        type: string
+      date:
+        type: string
+        format: date-time
+      description:
+        type: string
+      amount:
+        type: integer
+        format: currency
+      balance:
+        type: integer
+        format: currency
+      category:
+        type: string
+      notes:
+        type: string
+  TransactionUpdate:
+    type: object
+    properties:
+      category:
+        type: string
+        description: transaction category
+      notes:
+        type: string
+        description: transaction notes
+  TransactionResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+      message:
+        type: string
+      body:
+        $ref: "#/definitions/Transaction"
+  Transactions:
+    type: array
+    items:
+      $ref: "#/definitions/Transaction"
+  TransactionsResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+      message:
+        type: string
+      body:
+        $ref: "#/definitions/Transactions"

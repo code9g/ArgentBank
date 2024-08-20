@@ -1,11 +1,15 @@
 import { useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { signOut } from "../redux/actions";
+import { useLoginSelector } from "../redux/hooks";
 
 function SignOut() {
+  const { token } = useLoginSelector();
   const dispatch = useDispatch();
 
-  dispatch(signOut());
+  if (token) {
+    dispatch(signOut());
+  }
 
   return <Navigate to="/" />;
 }
