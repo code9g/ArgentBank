@@ -8,6 +8,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.scss";
 import Layout from "./layouts/Layout";
+import PrivateRoute from "./layouts/PrivateRoute";
 import Error from "./pages/Error";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
@@ -20,7 +21,9 @@ const routes = createRoutesFromElements(
     <Route errorElement={<Error />}>
       <Route index element={<Home />} />
       <Route path="sign-in" element={<SignIn />} />
-      <Route path="user" element={<User />} />
+      <Route path="user" element={<PrivateRoute />}>
+        <Route index element={<User />} />
+      </Route>
       <Route path="sign-out" element={<SignOut />} />
       <Route path="*" element={<NotFound />} />
     </Route>

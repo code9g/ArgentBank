@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
 import Account from "../components/Account";
 import UserHeader from "../components/UserHeader";
 import { userLoad } from "../redux/actions";
@@ -13,19 +12,13 @@ function User() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (token) {
-      dispatch(userLoad(token));
-      const handle = setInterval(
-        () => dispatch(userLoad(token)),
-        INTERVAL_USER_DATA_REFRESH
-      );
-      return () => clearInterval(handle);
-    }
+    dispatch(userLoad(token));
+    const handle = setInterval(
+      () => dispatch(userLoad(token)),
+      INTERVAL_USER_DATA_REFRESH
+    );
+    return () => clearInterval(handle);
   }, [token, dispatch]);
-
-  if (!token) {
-    return <Navigate to="/sign-in" />;
-  }
 
   return (
     <>
