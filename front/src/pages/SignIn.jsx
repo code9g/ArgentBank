@@ -32,8 +32,8 @@ function SignIn() {
           <h1>Sign In</h1>
           <form onSubmit={handleSubmit}>
             {error && <div className="sign-in-error">{error}</div>}
-            <InputText id="username" label="Username" type="text" />
-            <InputPassword id="password" label="Password" type="password" />
+            <InputText id="username" label="Username" required />
+            <InputPassword id="password" label="Password" required />
             <InputCheckbox id="remember" label="Remember me" />
             <button type="submit" className="sign-in-button">
               Sign In
