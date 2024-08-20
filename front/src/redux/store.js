@@ -12,6 +12,7 @@ const store = configureStore({
     login: loginSlice.reducer,
     profile: profileSlice.reducer,
   },
+  devTools: import.meta.env.DEV,
 });
 
 export default store;

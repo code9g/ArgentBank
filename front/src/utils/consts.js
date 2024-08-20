@@ -24,6 +24,16 @@ export const LOGIN_ENDPOINT = "/user/login";
 export const PROFILE_ENDPOINT = "/user/profile";
 
 /**
+ * Constante/Objet d'affichage de la monnaie, ici, au format américain et en $
+ *
+ * @type {Intl.NumberFormat}
+ */
+export const currencyFormat = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+});
+
+/**
  * Liste des "features" de la page d'accueil
  *
  * @type {Array<{title: string, icon:any, alt: string, description: string}>}
