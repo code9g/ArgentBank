@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { userUpdate } from "../redux/actions";
+import { useLoginSelector, useProfileSelector } from "../redux/hooks";
 import State from "./State";
 
 function UserHeader() {
@@ -10,9 +11,9 @@ function UserHeader() {
     isFetching,
     error,
     user: { firstName, lastName },
-  } = useSelector((state) => state.profile);
+  } = useProfileSelector();
+  const { token } = useLoginSelector();
 
-  const { token } = useSelector((state) => state.login);
   const dispatch = useDispatch();
 
   const submit = (e) => {

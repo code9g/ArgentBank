@@ -1,14 +1,15 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Account from "../components/Account";
 import UserHeader from "../components/UserHeader";
 import { userLoad } from "../redux/actions";
+import { useLoginSelector } from "../redux/hooks";
 import { accounts } from "../utils/consts";
 
 const INTERVAL_USER_DATA_REFRESH = 5 * 60 * 1000;
 
 function User() {
-  const { token } = useSelector((state) => state.login);
+  const { token } = useLoginSelector();
   const dispatch = useDispatch();
 
   useEffect(() => {

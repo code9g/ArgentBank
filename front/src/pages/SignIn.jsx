@@ -1,13 +1,14 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
 import InputCheckbox from "../components/forms/InputCheckbox";
 import InputPassword from "../components/forms/InputPassword";
 import InputText from "../components/forms/InputText";
 import State from "../components/State";
 import { signIn } from "../redux/actions";
+import { useLoginSelector } from "../redux/hooks";
 
 function SignIn() {
-  const { token, isFetching, error } = useSelector((state) => state.login);
+  const { token, isFetching, error } = useLoginSelector();
   const dispatch = useDispatch();
 
   async function handleSubmit(e) {
