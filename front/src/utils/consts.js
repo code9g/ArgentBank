@@ -41,6 +41,18 @@ export const LOGIN_ENDPOINT = "/user/login";
 export const PROFILE_ENDPOINT = "/user/profile";
 
 /**
+ * Render pour toast.promise
+ *
+ * @example
+ * toast.promise(promise, {pending: ..., success: ..., error: promiseError})
+ *
+ * @type {{ render: ({ data }: { data: any; }) => any; }}
+ */
+export const promiseError = {
+  render: ({ data }) => data.statusText || data.message,
+};
+
+/**
  * Constante/Objet d'affichage de la monnaie, ici, au format américain et en $
  *
  * @type {Intl.NumberFormat}
