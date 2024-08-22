@@ -9,7 +9,15 @@ import iconSecurity from "../assets/img/icon-security.png";
  *
  * @type {{ active: boolean; delay: number; random: number; }}
  */
-export const FAKE_NETWORK = { active: true, delay: 1500, random: 800 };
+export const FAKE_NETWORK = { active: true, delay: 500, random: 800 };
+
+/**
+ * Intervalle de rafraichissement des données utilisateur de la page /user,
+ * exprimé en ms.
+ *
+ * @type {number}
+ */
+export const INTERVAL_USER_DATA_REFRESH = 5 * 60 * 1000;
 
 /**
  * URL pour les requêtes à l'API de l'application

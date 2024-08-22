@@ -1,22 +1,23 @@
-import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import InputCheckbox from "../components/forms/ui/InputCheckbox";
 import InputEmail from "../components/forms/ui/InputEmail";
 import InputPassword from "../components/forms/ui/InputPassword";
-import State from "../components/State";
+import Smoke from "../components/Smoke";
 import Title from "../components/Title";
 import { signIn } from "../redux/actions";
 import { useAuthSelector } from "../redux/hooks";
 import { authError } from "../redux/slices/authSlice";
+import { promiseError } from "../utils/functions";
 
-function SignIn({ to }) {
+function LogIn() {
   const { isAuth, isFetching, error } = useAuthSelector();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   if (isAuth) {
-    return <Navigate to={to} />;
+    return <Navigate to="/" />;
   }
 
   const handleSubmit = async (e) => {
@@ -28,13 +29,13 @@ function SignIn({ to }) {
     };
     const remember = e.target["remember"].checked;
 
-    toast.promise(dispatch(signIn(credentials, remember)), {
-      pending: "Connecting...",
-      success: "Your are connected successfully !",
-      error: {
-        render: ({ data }) => data.statusText || data.message,
-      },
-    });
+    toast
+      .promise(dispatch(signIn(credentials, remember)), {
+        pending: "Connecting...",
+        success: "Your are connected successfully !",
+        error: promiseError,
+      })
+      .then(() => navigate("/user"));
   };
 
   const handleChange = () => dispatch(authError(null));
@@ -42,7 +43,7 @@ function SignIn({ to }) {
   return (
     <>
       <Title>Sign In</Title>
-      {isFetching && <State />}
+      {isFetching && <Smoke />}
       <main className="main bg-dark">
         <section className="sign-in-content">
           <i className="fa fa-user-circle sign-in-icon"></i>
@@ -78,8 +79,4 @@ function SignIn({ to }) {
   );
 }
 
-SignIn.propTypes = {
-  to: PropTypes.string,
-};
-
-export default SignIn;
+export default LogIn;

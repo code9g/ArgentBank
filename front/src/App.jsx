@@ -11,20 +11,20 @@ import Layout from "./layouts/Layout";
 import Private from "./layouts/Private";
 import Error from "./pages/Error";
 import Home from "./pages/Home";
+import LogIn from "./pages/LogIn";
+import LogOut from "./pages/LogOut";
 import NotFound from "./pages/NotFound";
-import SignIn from "./pages/SignIn";
-import SignOut from "./pages/SignOut";
 import User from "./pages/User";
 
 const routes = createRoutesFromElements(
   <Route path="/" element={<Layout />}>
     <Route errorElement={<Error />}>
       <Route index element={<Home />} />
-      <Route path="sign-in" element={<SignIn />} />
-      <Route path="user" element={<Private to="/sign-in" />}>
+      <Route path="sign-in" element={<LogIn />} />
+      <Route path="user" element={<Private />}>
         <Route index element={<User />} />
       </Route>
-      <Route path="sign-out" element={<SignOut />} />
+      <Route path="sign-out" element={<LogOut />} />
       <Route path="*" element={<NotFound />} />
     </Route>
   </Route>
