@@ -30,7 +30,7 @@ export const signIn =
   ({ email, password, remember }) =>
   async (dispatch) => {
     dispatch(loginFetching());
-    loginUser(email, password)
+    return loginUser(email, password)
       .then(async (data) => {
         const token = data.token;
         return userLayout(dispatch, getUserProfile, token).then((data) => {
@@ -44,7 +44,6 @@ export const signIn =
       .catch((error) => {
         if (error.status === 400) {
           dispatch(loginError("Invalid username or password !"));
-          toast.error("Invalid username or password !");
         } else {
           dispatch(loginError(error.statusText || error.message));
           toast.error(error.statusText || error.message);
