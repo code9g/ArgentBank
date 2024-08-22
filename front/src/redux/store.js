@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { loginSlice } from "./slices/loginSlice";
-import { profileSlice } from "./slices/profileSlice";
+import authReducer from "./slices/authSlice";
+import profileReducer from "./slices/profileSlice";
 
 /**
  * Constante du "store" de l'application
@@ -9,8 +9,8 @@ import { profileSlice } from "./slices/profileSlice";
  */
 const store = configureStore({
   reducer: {
-    login: loginSlice.reducer,
-    profile: profileSlice.reducer,
+    auth: authReducer,
+    profile: profileReducer,
   },
   devTools: import.meta.env.DEV,
 });

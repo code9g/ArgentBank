@@ -1,9 +1,9 @@
 import { Link, NavLink } from "react-router-dom";
 import logo from "../assets/img/argentBankLogo.png";
-import { useLoginSelector } from "../redux/hooks";
+import { useAuthSelector } from "../redux/hooks";
 
 function Header() {
-  const { token, firstName } = useLoginSelector();
+  const { token, firstName } = useAuthSelector();
 
   return (
     <nav className="main-nav">

@@ -1,11 +1,11 @@
 import { useSelector } from "react-redux";
 
-const loginSelector = (state) => state.login;
+export const authSelector = (state) => state.auth;
 
-const profileSelector = (state) => state.profile;
+export const profileSelector = (state) => state.profile;
 
-export const useLoginSelector = () => {
-  const selector = useSelector(loginSelector);
+export const useAuthSelector = () => {
+  const selector = useSelector(authSelector);
   return { ...selector, isAuth: selector.token !== null };
 };
 

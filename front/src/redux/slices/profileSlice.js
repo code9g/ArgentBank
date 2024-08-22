@@ -72,8 +72,6 @@ export const profileSlice = createSlice({
   },
 });
 
-export const { actions, reducer } = profileSlice;
-
 /**
  * Exportation des actions pour le dispatch de ce slice
  *
@@ -86,4 +84,6 @@ export const {
   profileDone,
   profileUpdate,
   profileClear,
-} = actions;
+} = profileSlice.actions;
+
+export default profileSlice.reducer;

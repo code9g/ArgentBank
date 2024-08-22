@@ -1,14 +1,14 @@
 import PropTypes from "prop-types";
 import { Navigate, Outlet } from "react-router-dom";
-import { useLoginSelector } from "../redux/hooks";
+import { useAuthSelector } from "../redux/hooks";
 
-function PrivateRoute({ to }) {
-  const { isAuth } = useLoginSelector();
+function Private({ to }) {
+  const { isAuth } = useAuthSelector();
   return isAuth ? <Outlet /> : <Navigate to={to} replace={true} />;
 }
 
-PrivateRoute.propTypes = {
+Private.propTypes = {
   to: PropTypes.string,
 };
 
-export default PrivateRoute;
+export default Private;

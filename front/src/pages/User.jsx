@@ -4,13 +4,13 @@ import Account from "../components/Account";
 import Title from "../components/Title";
 import UserHeader from "../components/UserHeader";
 import { userLoad } from "../redux/actions";
-import { useLoginSelector } from "../redux/hooks";
+import { useAuthSelector } from "../redux/hooks";
 import { accounts } from "../utils/consts";
 
 const INTERVAL_USER_DATA_REFRESH = 5 * 60 * 1000;
 
 function User() {
-  const { token } = useLoginSelector();
+  const { token } = useAuthSelector();
   const dispatch = useDispatch();
 
   useEffect(() => {

@@ -2,17 +2,17 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { signOut } from "../redux/actions";
-import { useLoginSelector } from "../redux/hooks";
+import { useAuthSelector } from "../redux/hooks";
 
 function SignOut() {
-  const { token } = useLoginSelector();
+  const { isAuth } = useAuthSelector();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (token) {
+    if (isAuth) {
       dispatch(signOut());
     }
-  }, [token, dispatch]);
+  }, [isAuth, dispatch]);
 
   return <Navigate to="/" />;
 }

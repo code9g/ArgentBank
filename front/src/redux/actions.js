@@ -1,13 +1,13 @@
 import { toast } from "react-toastify";
 import { getUserProfile, loginUser, updateUserProfile } from "../services/api";
 import {
-  loginDisconnected,
-  loginDone,
-  loginError,
-  loginFetching,
-  loginSuccess,
-  loginUpdateFirstName,
-} from "./slices/loginSlice";
+  authDisconnected,
+  authDone,
+  authError,
+  authFetching,
+  authSuccess,
+  authUpdateFirstName,
+} from "./slices/authSlice";
 import {
   profileClear,
   profileDone,
@@ -29,27 +29,25 @@ import {
 export const signIn =
   ({ email, password, remember }) =>
   async (dispatch) => {
-    dispatch(loginFetching());
+    dispatch(authFetching());
     return loginUser(email, password)
       .then(async (data) => {
         const token = data.token;
         return userLayout(dispatch, getUserProfile, token).then((data) => {
-          dispatch(
-            loginSuccess({ token, firstName: data.firstName, remember })
-          );
+          dispatch(authSuccess({ token, firstName: data.firstName, remember }));
           toast.success("You are successfully connected");
           return data;
         });
       })
       .catch((error) => {
         if (error.status === 400) {
-          dispatch(loginError("Invalid username or password !"));
+          dispatch(authError("Invalid username or password !"));
         } else {
-          dispatch(loginError(error.statusText || error.message));
+          dispatch(authError(error.statusText || error.message));
           toast.error(error.statusText || error.message);
         }
       })
-      .finally(() => dispatch(loginDone()));
+      .finally(() => dispatch(authDone()));
   };
 
 /**
@@ -58,7 +56,7 @@ export const signIn =
  * @returns {(dispatch: any) => any}
  */
 export const signOut = () => async (dispatch) => {
-  dispatch(loginDisconnected());
+  dispatch(authDisconnected());
   dispatch(profileClear());
   toast.success("You are logged out");
 };
@@ -78,7 +76,7 @@ const userLayout = async (dispatch, api, ...args) => {
   return api(...args)
     .then((data) => {
       dispatch(profileSuccess(data));
-      dispatch(loginUpdateFirstName(data.firstName));
+      dispatch(authUpdateFirstName(data.firstName));
       return data;
     })
     .catch((error) => {

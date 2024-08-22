@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { userUpdate } from "../redux/actions";
-import { useLoginSelector, useProfileSelector } from "../redux/hooks";
+import { useAuthSelector, useProfileSelector } from "../redux/hooks";
 import State from "./State";
 
 function UserHeader() {
@@ -12,7 +12,7 @@ function UserHeader() {
     error,
     user: { firstName, lastName },
   } = useProfileSelector();
-  const { token } = useLoginSelector();
+  const { token } = useAuthSelector();
 
   const dispatch = useDispatch();
 

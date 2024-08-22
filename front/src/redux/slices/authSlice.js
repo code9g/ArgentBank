@@ -28,15 +28,15 @@ if (token) {
  *
  * @type {Slice}
  */
-export const loginSlice = createSlice({
-  name: "login",
+export const authSlice = createSlice({
+  name: "auth",
   initialState,
   reducers: {
-    loginFetching: (state) => {
+    authFetching: (state) => {
       state.isFetching = true;
     },
 
-    loginSuccess: (state, { payload }) => {
+    authSuccess: (state, { payload }) => {
       state.error = null;
       state.token = payload.token;
       state.remember = payload.remember;
@@ -45,22 +45,22 @@ export const loginSlice = createSlice({
       }
     },
 
-    loginDisconnected: (state) => {
+    authDisconnected: (state) => {
       localStorage.clear();
       state.token = null;
       state.firstName = null;
       state.remember = false;
     },
 
-    loginError: (state, { payload: error }) => {
+    authError: (state, { payload: error }) => {
       state.error = error;
     },
 
-    loginDone: (state) => {
+    authDone: (state) => {
       state.isFetching = false;
     },
 
-    loginUpdateFirstName: (state, { payload }) => {
+    authUpdateFirstName: (state, { payload }) => {
       state.firstName = payload;
       if (state.remember) {
         localStorage.setItem("firstName", payload);
@@ -69,19 +69,19 @@ export const loginSlice = createSlice({
   },
 });
 
-export const { actions, reducer } = loginSlice;
-
 /**
  * Exportation des actions pour le dispatch de ce slice
  *
  * @type {ActionCreator}
  */
 export const {
-  loginFetching,
-  loginSuccess,
-  loginDisconnecting,
-  loginDisconnected,
-  loginError,
-  loginDone,
-  loginUpdateFirstName,
-} = actions;
+  authFetching,
+  authSuccess,
+  authDisconnecting,
+  authDisconnected,
+  authError,
+  authDone,
+  authUpdateFirstName,
+} = authSlice.actions;
+
+export default authSlice.reducer;

@@ -6,10 +6,10 @@ import InputPassword from "../components/forms/InputPassword";
 import State from "../components/State";
 import Title from "../components/Title";
 import { signIn } from "../redux/actions";
-import { useLoginSelector } from "../redux/hooks";
+import { useAuthSelector } from "../redux/hooks";
 
 function SignIn() {
-  const { token, isFetching, error } = useLoginSelector();
+  const { token, isFetching, error } = useAuthSelector();
   const dispatch = useDispatch();
 
   async function handleSubmit(e) {
