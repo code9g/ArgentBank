@@ -20,7 +20,7 @@ const routes = createRoutesFromElements(
   <Route path="/" element={<Layout />}>
     <Route errorElement={<Error />}>
       <Route index element={<Home />} />
-      <Route path="sign-in" element={<SignIn />} />
+      <Route path="sign-in" element={<SignIn to="/user" />} />
       <Route path="user" element={<Private to="/sign-in" />}>
         <Route index element={<User />} />
       </Route>

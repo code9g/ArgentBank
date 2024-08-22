@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -10,12 +11,12 @@ import { signIn } from "../redux/actions";
 import { useAuthSelector } from "../redux/hooks";
 import { authError } from "../redux/slices/authSlice";
 
-function SignIn() {
+function SignIn({ to }) {
   const { isAuth, isFetching, error } = useAuthSelector();
   const dispatch = useDispatch();
 
   if (isAuth) {
-    return <Navigate to="/user" />;
+    return <Navigate to={to} />;
   }
 
   const handleSubmit = async (e) => {
@@ -76,5 +77,9 @@ function SignIn() {
     </>
   );
 }
+
+SignIn.propTypes = {
+  to: PropTypes.string,
+};
 
 export default SignIn;
