@@ -1,8 +1,5 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
-import { userUpdate } from "../redux/actions";
-import { useAuthSelector, useProfileSelector } from "../redux/hooks";
+import { useProfileSelector } from "../redux/hooks";
 import ProfileEdit from "./forms/ProfileEdit";
 
 function UserHeader() {
@@ -12,34 +9,9 @@ function UserHeader() {
     isFetching,
     user: { firstName, lastName },
   } = useProfileSelector();
-  const { token } = useAuthSelector();
-
-  const dispatch = useDispatch();
 
   const open = () => setIsEditing(true);
-  const cancel = () => setIsEditing(false);
-  const submit = async (e) => {
-    e.preventDefault();
-    toast
-      .promise(
-        dispatch(
-          userUpdate(token, {
-            firstName: e.target["firstName"].value,
-            lastName: e.target["lastName"].value,
-          })
-        ),
-        {
-          pending: "Updating...",
-          success: "Your profile has been successfully updated",
-          error: {
-            render: ({ data }) => {
-              return data.statusText || data.error;
-            },
-          },
-        }
-      )
-      .then(() => setIsEditing(false));
-  };
+  const close = () => setIsEditing(false);
 
   return (
     <>
@@ -60,7 +32,7 @@ function UserHeader() {
           )}
         </h1>
         {isEditing ? (
-          <ProfileEdit onSubmit={submit} onCancel={cancel} />
+          <ProfileEdit close={close} />
         ) : (
           <button className="edit-button" type="button" onClick={open}>
             Edit Name

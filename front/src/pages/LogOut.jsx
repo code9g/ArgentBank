@@ -11,11 +11,13 @@ function LogOut() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    toast.promise(dispatch(signOut()), {
-      pending: "Disconnecting...",
-      success: "You are logged out",
-      error: promiseError,
-    });
+    if (isAuth) {
+      toast.promise(dispatch(signOut()), {
+        pending: "Disconnecting...",
+        success: "You are logged out",
+        error: promiseError,
+      });
+    }
   }, [isAuth, dispatch]);
 
   return <Navigate to="/" />;

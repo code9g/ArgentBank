@@ -15,7 +15,7 @@ function LogIn() {
       <Title>Sign In</Title>
       <main className="main bg-dark">
         <section className="sign-in-content">
-          <SignIn />
+          <SignIn to="/user" />
         </section>
       </main>
     </>

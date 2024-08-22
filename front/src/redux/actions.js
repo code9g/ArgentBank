@@ -90,6 +90,7 @@ const userLayout = async (dispatch, api, ...args) => {
     .catch((error) => {
       // TODO: En cas d'erreur "401 - Unauthorized", faudrait-il déconnecter l'utilisateur ?
       dispatch(profileError(error.statusText || error.message));
+      throw error;
     })
     .finally(() => {
       dispatch(profileDone());
