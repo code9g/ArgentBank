@@ -4,7 +4,6 @@ import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { signOut } from "../redux/actions";
 import { useAuthSelector } from "../redux/hooks";
-import { toastify } from "../utils/functions";
 
 let flag = false;
 function SignOut() {
@@ -14,23 +13,13 @@ function SignOut() {
   useEffect(() => {
     // Trick pour gérer le "Strict Mode" de react en mode développement
     if (isAuth && (import.meta.env.PROD || flag)) {
-      const id = toast.loading("Disconnecting...");
-      dispatch(signOut())
-        .then(() => {
-          toast.update(
-            id,
-            toastify({ render: "You are logged out", type: "success" })
-          );
-        })
-        .catch((error) => {
-          toast.update(
-            id,
-            toastify({
-              render: error.statusText || error.message,
-              type: "error",
-            })
-          );
-        });
+      toast.promise(dispatch(signOut()), {
+        pending: "Disconnecting...",
+        success: "You are logged out",
+        error: {
+          render: ({ data }) => data.statusText || data.message,
+        },
+      });
     }
     return () => (flag = !flag);
   }, [isAuth, dispatch]);

@@ -1,15 +1,14 @@
 import { useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import InputCheckbox from "../components/forms/InputCheckbox";
-import InputEmail from "../components/forms/InputEmail";
-import InputPassword from "../components/forms/InputPassword";
+import InputCheckbox from "../components/forms/ui/InputCheckbox";
+import InputEmail from "../components/forms/ui/InputEmail";
+import InputPassword from "../components/forms/ui/InputPassword";
 import State from "../components/State";
 import Title from "../components/Title";
 import { signIn } from "../redux/actions";
 import { useAuthSelector } from "../redux/hooks";
 import { authError } from "../redux/slices/authSlice";
-import { toastify } from "../utils/functions";
 
 function SignIn() {
   const { isAuth, isFetching, error } = useAuthSelector();
@@ -21,31 +20,20 @@ function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const credentials = {
       email: e.target["username"].value,
       password: e.target["password"].value,
     };
     const remember = e.target["remember"].checked;
-    const id = toast.loading("Connecting...");
-    dispatch(signIn(credentials, remember))
-      .then(() => {
-        toast.update(
-          id,
-          toastify({
-            render: "You are successfully connected",
-            type: "success",
-          })
-        );
-      })
-      .catch((error) => {
-        toast.update(
-          id,
-          toastify({
-            render: error.statusText || error.message,
-            type: "error",
-          })
-        );
-      });
+
+    toast.promise(dispatch(signIn(credentials, remember)), {
+      pending: "Connecting...",
+      success: "Your are connected successfully !",
+      error: {
+        render: ({ data }) => data.statusText || data.message,
+      },
+    });
   };
 
   const handleChange = () => dispatch(authError(null));

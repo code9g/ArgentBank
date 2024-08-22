@@ -9,7 +9,7 @@ import iconSecurity from "../assets/img/icon-security.png";
  *
  * @type {{ active: boolean; delay: number; random: number; }}
  */
-export const FAKE_NETWORK = { active: false, delay: 300, random: 800 };
+export const FAKE_NETWORK = { active: true, delay: 1500, random: 800 };
 
 /**
  * URL pour les requêtes à l'API de l'application
@@ -100,16 +100,3 @@ export const accounts = [
     description: "Current Balance",
   },
 ];
-
-/**
- * Configuration des "toasts"
- *
- * @type {{ position: string; autoClose: number; closeOnClick: boolean; pauseOnHover: boolean; pauseOnFocusLoss: boolean; }}
- */
-export const toastConfig = {
-  position: "top-center",
-  autoClose: 1500,
-  closeOnClick: true,
-  pauseOnHover: true,
-  pauseOnFocusLoss: false,
-};
