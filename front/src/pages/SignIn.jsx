@@ -4,6 +4,7 @@ import InputCheckbox from "../components/forms/InputCheckbox";
 import InputEmail from "../components/forms/InputEmail";
 import InputPassword from "../components/forms/InputPassword";
 import State from "../components/State";
+import Title from "../components/Title";
 import { signIn } from "../redux/actions";
 import { useLoginSelector } from "../redux/hooks";
 
@@ -25,6 +26,7 @@ function SignIn() {
 
   return (
     <>
+      <Title>Sign In</Title>
       {isFetching && <State message="Connecting..." />}
       <main className="main bg-dark">
         <section className="sign-in-content">

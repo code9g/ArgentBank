@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Account from "../components/Account";
+import Title from "../components/Title";
 import UserHeader from "../components/UserHeader";
 import { userLoad } from "../redux/actions";
 import { useLoginSelector } from "../redux/hooks";
@@ -23,6 +24,7 @@ function User() {
 
   return (
     <>
+      <Title>User</Title>
       <main className="main bg-dark">
         <UserHeader />
         <h2 className="sr-only">Accounts</h2>

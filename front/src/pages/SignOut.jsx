@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
+import Title from "../components/Title";
 import { signOut } from "../redux/actions";
 import { useLoginSelector } from "../redux/hooks";
 
@@ -11,7 +12,12 @@ function SignOut() {
     dispatch(signOut());
   }
 
-  return <Navigate to="/" />;
+  return (
+    <>
+      <Title>Sign Out</Title>
+      <Navigate to="/" />
+    </>
+  );
 }
 
 SignOut.propTypes = {};
