@@ -4,7 +4,7 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, Zoom } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.scss";
 import Layout from "./layouts/Layout";
@@ -20,7 +20,7 @@ const routes = createRoutesFromElements(
   <Route path="/" element={<Layout />}>
     <Route errorElement={<Error />}>
       <Route index element={<Home />} />
-      <Route path="sign-in" element={<SignIn to="/user" />} />
+      <Route path="sign-in" element={<SignIn />} />
       <Route path="user" element={<Private to="/sign-in" />}>
         <Route index element={<User />} />
       </Route>
@@ -42,7 +42,7 @@ function App() {
         closeOnClick={true}
         pauseOnHover={true}
         pauseOnFocusLoss={true}
-        transition={App}
+        transition={Zoom}
       />
     </>
   );
