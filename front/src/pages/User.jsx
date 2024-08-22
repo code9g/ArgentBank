@@ -7,8 +7,11 @@ import Title from "../components/Title";
 import UserHeader from "../components/UserHeader";
 import { userLoad } from "../redux/actions";
 import { useAuthSelector, useProfileSelector } from "../redux/hooks";
-import { accounts, INTERVAL_USER_DATA_REFRESH } from "../utils/consts";
-import { promiseError } from "../utils/functions";
+import {
+  accounts,
+  INTERVAL_USER_DATA_REFRESH,
+  promiseError,
+} from "../utils/consts";
 
 function User() {
   const { token } = useAuthSelector();

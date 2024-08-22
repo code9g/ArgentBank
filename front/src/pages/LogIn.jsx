@@ -9,7 +9,7 @@ import Title from "../components/Title";
 import { signIn } from "../redux/actions";
 import { useAuthSelector } from "../redux/hooks";
 import { authError } from "../redux/slices/authSlice";
-import { promiseError } from "../utils/functions";
+import { promiseError } from "../utils/consts";
 
 function LogIn() {
   const { isAuth, isFetching, error } = useAuthSelector();

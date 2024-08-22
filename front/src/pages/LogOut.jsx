@@ -4,7 +4,7 @@ import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { signOut } from "../redux/actions";
 import { useAuthSelector } from "../redux/hooks";
-import { promiseError } from "../utils/functions";
+import { promiseError } from "../utils/consts";
 
 function LogOut() {
   const { isAuth } = useAuthSelector();
