@@ -4,6 +4,7 @@ import {
   loginUser,
   updateUserProfile,
 } from "../services/api";
+import { FAKE_NETWORK } from "../utils/consts";
 import {
   authDisconnected,
   authDone,
@@ -20,6 +21,11 @@ import {
   profileSuccess,
 } from "./slices/profileSlice";
 
+const fake = async () =>
+  import.meta.env.DEV && FAKE_NETWORK.active
+    ? fakeNetwork(FAKE_NETWORK.delay, FAKE_NETWORK.random)
+    : null;
+
 /**
  * Fonction de connexion à l'api et d'actualisation du store
  *
@@ -31,7 +37,7 @@ import {
  */
 export const signIn = (credentials, remember) => async (dispatch) => {
   dispatch(authFetching());
-  await fakeNetwork(3000, false);
+  await fake();
   return loginUser(credentials)
     .then(async (data) => {
       const token = data.token;
@@ -55,8 +61,11 @@ export const signIn = (credentials, remember) => async (dispatch) => {
  * @returns {(dispatch: any) => any}
  */
 export const signOut = () => async (dispatch) => {
+  dispatch(authFetching());
+  await fake();
   dispatch(authDisconnected());
   dispatch(profileClear());
+  dispatch(authDone());
 };
 
 /**
@@ -71,7 +80,7 @@ export const signOut = () => async (dispatch) => {
  */
 const userLayout = async (dispatch, api, ...args) => {
   dispatch(profileFetching());
-  await fakeNetwork(3000, false);
+  await fake();
   return api(...args)
     .then((data) => {
       dispatch(profileSuccess(data));

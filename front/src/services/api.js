@@ -83,5 +83,5 @@ export const updateUserProfile = async (token, profile) =>
  * @param {boolean} [random=true] Indique si il faut "randomiser" le délai qui servira de "base"
  * @returns
  */
-export const fakeNetwork = async (delay, random = true) =>
-  new Promise((res) => setTimeout(res, (random ? Math.random() : 1) * delay));
+export const fakeNetwork = async (delay, random = 0) =>
+  new Promise((res) => setTimeout(res, delay + Math.random() * random));

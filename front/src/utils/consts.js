@@ -3,6 +3,15 @@ import iconMoney from "../assets/img/icon-money.png";
 import iconSecurity from "../assets/img/icon-security.png";
 
 /**
+ * Permet d'activer ou non la simulation d'une lenteur de connexion/réponse,
+ *
+ * Note: ne fonctionne uniquement que si l'application est en développement
+ *
+ * @type {{ active: boolean; delay: number; random: number; }}
+ */
+export const FAKE_NETWORK = { active: false, delay: 300, random: 800 };
+
+/**
  * URL pour les requêtes à l'API de l'application
  *
  * @type {"http://localhost:3001/api/v1"}
