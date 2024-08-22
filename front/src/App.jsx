@@ -15,6 +15,7 @@ import NotFound from "./pages/NotFound";
 import SignIn from "./pages/SignIn";
 import SignOut from "./pages/SignOut";
 import User from "./pages/User";
+import { toastConfig } from "./utils/consts";
 
 const routes = createRoutesFromElements(
   <Route path="/" element={<Layout />}>
@@ -36,12 +37,7 @@ function App() {
   return (
     <>
       <RouterProvider router={router} />
-      <ToastContainer
-        position="top-center"
-        pauseOnFocusLoss={false}
-        pauseOnHover={false}
-        autoClose={3000}
-      />
+      <ToastContainer {...toastConfig} />
     </>
   );
 }

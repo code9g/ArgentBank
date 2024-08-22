@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 import { userUpdate } from "../redux/actions";
 import { useAuthSelector, useProfileSelector } from "../redux/hooks";
+import { toastify } from "../utils/functions";
 import State from "./State";
 
 function UserHeader() {
@@ -16,24 +18,39 @@ function UserHeader() {
 
   const dispatch = useDispatch();
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-
+    const id = toast.loading("Updating...");
     dispatch(
       userUpdate(token, {
         firstName: e.target["firstName"].value,
         lastName: e.target["lastName"].value,
       })
-    );
+    )
+      .then(() => {
+        toast.update(
+          id,
+          toastify({
+            render: "Your profile has been successfully updated",
+            type: "success",
+          })
+        );
+        setIsEditing(false);
+      })
+      .catch((error) => {
+        toast.update(
+          id,
+          toastify({
+            render: error.statusText || error.message,
+            type: "error",
+          })
+        );
+      });
   };
-
-  useEffect(() => {
-    setIsEditing(false);
-  }, [isFetching]);
 
   return (
     <>
-      {isFetching && <State message="Updating..." />}
+      {isFetching && <State />}
       <div className="header">
         <h1>
           Welcome back
@@ -52,6 +69,7 @@ function UserHeader() {
                 className="input-firstname"
                 type="text"
                 placeholder={firstName}
+                defaultValue={firstName}
                 minLength={2}
                 required
               />
@@ -60,6 +78,7 @@ function UserHeader() {
                 className="input-lastname"
                 type="text"
                 placeholder={lastName}
+                defaultValue={lastName}
                 minLength={2}
                 required
               />

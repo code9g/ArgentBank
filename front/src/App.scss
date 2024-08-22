@@ -168,24 +168,16 @@ body {
   margin-bottom: 0.5rem;
 }
 
-.sign-in-button {
-  display: block;
-  width: 100%;
-  padding: 8px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  margin-top: 1rem;
-  border-color: #00bc77;
-  background-color: #00bc77;
-  color: #fff;
-}
-
 .sign-in-content {
   box-sizing: border-box;
   background-color: white;
   width: 300px;
   margin: 3rem auto 3rem;
   padding: 2rem;
+
+  h1 {
+    margin-bottom: 0;
+  }
 }
 
 .sign-in-icon {
@@ -194,7 +186,12 @@ body {
 
 .sign-in-error {
   color: red;
-  padding: 0 0 1rem;
+  padding: 1rem 0;
+  opacity: 0;
+
+  &.show {
+    opacity: 1;
+  }
 }
 
 .input-checkbox {
@@ -220,6 +217,18 @@ body {
     padding: 5px;
     font-size: 1.2rem;
   }
+}
+
+.sign-in-button {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-top: 1rem;
+  border-color: #00bc77;
+  background-color: #00bc77;
+  color: #fff;
 }
 
 .footer {

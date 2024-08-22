@@ -1,5 +1,9 @@
-import { toast } from "react-toastify";
-import { getUserProfile, loginUser, updateUserProfile } from "../services/api";
+import {
+  fakeNetwork,
+  getUserProfile,
+  loginUser,
+  updateUserProfile,
+} from "../services/api";
 import {
   authDisconnected,
   authDone,
@@ -17,38 +21,33 @@ import {
 } from "./slices/profileSlice";
 
 /**
- * Fonction de connexion à l'api et d'actualisation du store,
- * prenant en compte l'email, le mot de passe et "se souvenir"
+ * Fonction de connexion à l'api et d'actualisation du store
  *
- * @param {{ email: any; password: any; remember: any; }} nfo
- * @param {*} nfo.email
- * @param {*} nfo.password
- * @param {*} nfo.remember
+ * @param {object} credentials Information de connexion de l'utilisateur
+ * @param {string} credentials.email e-mail de l'utilisateur
+ * @param {string} credentials.password Mot de passe de l'utilisateur
+ * @param {boolean} remember Indique si l'on doit stocker le token en tant que cookies
  * @returns {(dispatch: any) => any}
  */
-export const signIn =
-  ({ email, password, remember }) =>
-  async (dispatch) => {
-    dispatch(authFetching());
-    return loginUser(email, password)
-      .then(async (data) => {
-        const token = data.token;
-        return userLayout(dispatch, getUserProfile, token).then((data) => {
-          dispatch(authSuccess({ token, firstName: data.firstName, remember }));
-          toast.success("You are successfully connected");
-          return data;
-        });
-      })
-      .catch((error) => {
-        if (error.status === 400) {
-          dispatch(authError("Invalid username or password !"));
-        } else {
-          dispatch(authError(error.statusText || error.message));
-          toast.error(error.statusText || error.message);
-        }
-      })
-      .finally(() => dispatch(authDone()));
-  };
+export const signIn = (credentials, remember) => async (dispatch) => {
+  dispatch(authFetching());
+  await fakeNetwork(3000, false);
+  return loginUser(credentials)
+    .then(async (data) => {
+      const token = data.token;
+      return userLayout(dispatch, getUserProfile, token).then((data) => {
+        dispatch(authSuccess({ token, firstName: data.firstName, remember }));
+        return data;
+      });
+    })
+    .catch((error) => {
+      dispatch(authError(error.statusText || error.message));
+      throw error;
+    })
+    .finally(() => {
+      dispatch(authDone());
+    });
+};
 
 /**
  * Fonction de déconnexion
@@ -58,7 +57,6 @@ export const signIn =
 export const signOut = () => async (dispatch) => {
   dispatch(authDisconnected());
   dispatch(profileClear());
-  toast.success("You are logged out");
 };
 
 /**
@@ -73,6 +71,7 @@ export const signOut = () => async (dispatch) => {
  */
 const userLayout = async (dispatch, api, ...args) => {
   dispatch(profileFetching());
+  await fakeNetwork(3000, false);
   return api(...args)
     .then((data) => {
       dispatch(profileSuccess(data));
@@ -82,7 +81,6 @@ const userLayout = async (dispatch, api, ...args) => {
     .catch((error) => {
       // TODO: En cas d'erreur "401 - Unauthorized", faudrait-il déconnecter l'utilisateur ?
       dispatch(profileError(error.statusText || error.message));
-      toast.error(error.statusText || error.message);
     })
     .finally(() => {
       dispatch(profileDone());
@@ -110,7 +108,4 @@ export const userLoad = (token) => async (dispatch) =>
  * @returns {(dispatch: any) => unknown}
  */
 export const userUpdate = (token, profile) => async (dispatch) =>
-  userLayout(dispatch, updateUserProfile, token, profile).then((data) => {
-    toast.success("Your profile has been successfully updated");
-    return data;
-  });
+  userLayout(dispatch, updateUserProfile, token, profile);

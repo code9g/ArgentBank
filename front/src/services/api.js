@@ -32,12 +32,22 @@ const fetcher = async (endpoint, content, options = null) =>
  * Api d'authentification d'un utilisateur via son email et son mot de passe
  *
  * @async
- * @param {string} email Adresse e-mail
- * @param {string} password Mot de passe
+ * @param {object} credentials Information de connexion
+ * @param {string} credentials.email Adresse e-mail
+ * @param {string} credentials.password Mot de passe
  * @returns {Promise}
  */
-export const loginUser = async (email, password) =>
-  fetcher(LOGIN_ENDPOINT, { email, password }, { method: "POST" });
+export const loginUser = async (credentials) =>
+  fetcher(LOGIN_ENDPOINT, credentials, { method: "POST" }).catch((error) => {
+    if (error instanceof Response && error.status === 400) {
+      error = new Response(error.body, {
+        status: 400,
+        statusText: "Invalid username or password !",
+        headers: error.headers,
+      });
+    }
+    throw error;
+  });
 
 /**
  * Api de récupération des données d'un utilisateur actuellement connecté

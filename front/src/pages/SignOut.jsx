@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { signOut } from "../redux/actions";
 import { useAuthSelector } from "../redux/hooks";
 
@@ -10,7 +11,13 @@ function SignOut() {
 
   useEffect(() => {
     if (isAuth) {
-      dispatch(signOut());
+      dispatch(signOut())
+        .then(() => {
+          toast.success("You are logged out");
+        })
+        .catch(() => {
+          toast.error("Wrong !");
+        });
     }
   }, [isAuth, dispatch]);
 

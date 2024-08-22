@@ -91,3 +91,16 @@ export const accounts = [
     description: "Current Balance",
   },
 ];
+
+/**
+ * Configuration des "toasts"
+ *
+ * @type {{ position: string; autoClose: number; closeOnClick: boolean; pauseOnHover: boolean; pauseOnFocusLoss: boolean; }}
+ */
+export const toastConfig = {
+  position: "top-center",
+  autoClose: 1500,
+  closeOnClick: true,
+  pauseOnHover: true,
+  pauseOnFocusLoss: false,
+};
