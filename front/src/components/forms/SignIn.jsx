@@ -46,7 +46,7 @@ function SignIn({ to }) {
       <div className="input-text">
         <label htmlFor="username">Username</label>
         <input
-          type="email"
+          type="text"
           id="username"
           onChange={handleChange}
           minLength={2}
