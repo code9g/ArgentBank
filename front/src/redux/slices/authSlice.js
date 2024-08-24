@@ -34,7 +34,7 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    authFetching: (state) => {
+    authPending: (state) => {
       state.isFetching = true;
       state.status = "pending";
     },
@@ -82,7 +82,7 @@ export const authSlice = createSlice({
  * @type {ActionCreator}
  */
 export const {
-  authFetching,
+  authPending,
   authSuccess,
   authDisconnecting,
   authDisconnected,

@@ -52,7 +52,6 @@ function SignIn({ to }) {
           id="username"
           onChange={handleChange}
           minLength={2}
-          defaultValue="tony@stark.com"
           required
         />
       </div>
@@ -62,7 +61,6 @@ function SignIn({ to }) {
           type="password"
           id="password"
           onChange={handleChange}
-          defaultValue="password123"
           minLength={2}
           required
         />

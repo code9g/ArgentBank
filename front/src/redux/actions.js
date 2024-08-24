@@ -8,14 +8,14 @@ import { FAKE_NETWORK, INTERVAL_USER_DATA_REFRESH } from "../utils/consts";
 import {
   authDisconnected,
   authError,
-  authFetching,
+  authPending,
   authSuccess,
   authUpdateFirstName,
 } from "./slices/authSlice";
 import {
   profileClear,
   profileError,
-  profileFetching,
+  profilePending,
   profileSuccess,
 } from "./slices/profileSlice";
 
@@ -34,12 +34,12 @@ const fake = async () =>
  * @returns {Promise}
  */
 export const signIn = (credentials, remember) => async (dispatch) => {
-  dispatch(authFetching());
+  dispatch(authPending());
   await fake();
   return loginUser(credentials)
     .then(async (data) => {
       const token = data.token;
-      dispatch(profileFetching("get"));
+      dispatch(profilePending("get"));
       await fake();
       return getUserProfile(token)
         .then((data) => {
@@ -70,7 +70,7 @@ export const signIn = (credentials, remember) => async (dispatch) => {
  * @returns {Promise}
  */
 export const signOut = () => async (dispatch) => {
-  dispatch(authFetching());
+  dispatch(authPending());
   await fake();
   dispatch(authDisconnected());
   dispatch(profileClear());
@@ -87,7 +87,7 @@ export const signOut = () => async (dispatch) => {
  */
 const userLayout = async (dispatch, getState, api, action, ...args) => {
   const token = getState().auth.token;
-  dispatch(profileFetching(action));
+  dispatch(profilePending(action));
   await fake();
   return api(token, ...args)
     .then((data) => {

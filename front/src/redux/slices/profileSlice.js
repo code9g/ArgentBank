@@ -30,7 +30,7 @@ export const profileSlice = createSlice({
   name: "profile",
   initialState,
   reducers: {
-    profileFetching: (state, { payload: action }) => {
+    profilePending: (state, { payload: action }) => {
       state.isFetching = true;
       state.expireAt = null;
       state.action = action;
@@ -83,7 +83,7 @@ export const profileSlice = createSlice({
  * @type {ActionCreator}
  */
 export const {
-  profileFetching,
+  profilePending,
   profileSuccess,
   profileError,
   profileUpdate,
