@@ -11,9 +11,9 @@ import { API_URL, LOGIN_ENDPOINT, PROFILE_ENDPOINT } from "../utils/consts";
  * @param {string} [options.method=GET] Méthode de la requête (GET, POST, etc...)
  * @returns {Promise}
  */
-const fetcher = async (endpoint, content, options = null) =>
+const fetcher = async (endpoint, method, content, options = null) =>
   fetch(API_URL + endpoint, {
-    method: options?.method ?? "GET",
+    method,
     headers: {
       "Content-Type": "application/json",
       Authorization: options?.token ? `Bearer ${options.token}` : null,
@@ -37,17 +37,19 @@ const fetcher = async (endpoint, content, options = null) =>
  * @param {string} credentials.password Mot de passe
  * @returns {Promise}
  */
-export const loginUser = async (credentials) =>
-  fetcher(LOGIN_ENDPOINT, credentials, { method: "POST" }).catch((error) => {
-    if (error instanceof Response && error.status === 400) {
-      error = new Response(error.body, {
-        status: 400,
-        statusText: "Invalid username or password !",
-        headers: error.headers,
-      });
-    }
-    throw error;
-  });
+export const fetchLogin = async (credentials) =>
+  fetcher(LOGIN_ENDPOINT, "POST", credentials)
+    .catch((error) => {
+      if (error instanceof Response && error.status === 400) {
+        throw new Response(error.body, {
+          status: 400,
+          statusText: "Invalid username or password !",
+          headers: error.headers,
+        });
+      }
+      throw error;
+    })
+    .then((data) => data.token);
 
 /**
  * Api de récupération des données d'un utilisateur actuellement connecté
@@ -57,8 +59,8 @@ export const loginUser = async (credentials) =>
  * @param {string} token Jeton d'authenfication
  * @returns {Promise}
  */
-export const getUserProfile = async (token) =>
-  fetcher(PROFILE_ENDPOINT, null, { method: "POST", token });
+export const fetchGetProfile = async (token) =>
+  fetcher(PROFILE_ENDPOINT, "POST", null, { token });
 
 /**
  * Api de modification du profil d'un utilisateur actuellement connecté
@@ -72,8 +74,8 @@ export const getUserProfile = async (token) =>
  * @param {string} profile.lastName Nom de l'utilisateur
  * @returns {Promise}
  */
-export const updateUserProfile = async (token, profile) =>
-  fetcher(PROFILE_ENDPOINT, profile, { method: "PUT", token });
+export const fetchUpdateProfile = async (token, profile) =>
+  fetcher(PROFILE_ENDPOINT, "PUT", profile, { token });
 
 /**
  * Api pour simuler un délai de connexion/réponse, à n'utiliser

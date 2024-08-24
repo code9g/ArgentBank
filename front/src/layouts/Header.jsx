@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/img/argentBankLogo.png";
 
 import { useDispatch } from "react-redux";
@@ -10,14 +10,20 @@ import { promiseError } from "../utils/consts";
 function Header() {
   const { isAuth, firstName } = useAuthSelector();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const logout = (e) => {
+  const logout = async (e) => {
     e.preventDefault();
-    toast.promise(dispatch(signOut()), {
-      pending: "Disconnecting...",
-      success: "You are logged out",
-      error: promiseError,
-    });
+    try {
+      await toast.promise(dispatch(signOut()), {
+        pending: "Disconnecting...",
+        success: "You are logged out",
+        error: promiseError,
+      });
+      navigate("/");
+    } catch (error) {
+      // No report error
+    }
   };
 
   return (

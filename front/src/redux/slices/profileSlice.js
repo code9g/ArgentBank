@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { INTERVAL_USER_DATA_REFRESH } from "../../utils/consts";
 
 /**
  * Données initiales de l'état de connexion (profileSlice)
@@ -38,9 +39,9 @@ export const profileSlice = createSlice({
       state.error = null;
     },
 
-    profileSuccess: (state, { payload: { user, expireAt } }) => {
+    profileSuccess: (state, { payload: user }) => {
       state.error = null;
-      state.expireAt = expireAt;
+      state.expireAt = Date.now() + INTERVAL_USER_DATA_REFRESH;
       state.status = "success";
       state.user.id = user.id;
       state.user.createdAt = user.createdAt;

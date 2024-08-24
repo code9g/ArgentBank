@@ -1,8 +1,8 @@
 import {
   fakeNetwork,
-  getUserProfile,
-  loginUser,
-  updateUserProfile,
+  fetchGetProfile,
+  fetchLogin,
+  fetchUpdateProfile,
 } from "../services/api";
 import { FAKE_NETWORK, INTERVAL_USER_DATA_REFRESH } from "../utils/consts";
 import {
@@ -36,31 +36,24 @@ const fake = async () =>
 export const signIn = (credentials, remember) => async (dispatch) => {
   dispatch(authPending());
   await fake();
-  return loginUser(credentials)
-    .then(async (data) => {
-      const token = data.token;
-      dispatch(profilePending("get"));
-      await fake();
-      return getUserProfile(token)
-        .then((data) => {
-          dispatch(authSuccess({ token, remember }));
-          dispatch(
-            profileSuccess({
-              user: data,
-              expireAt: Date.now() + INTERVAL_USER_DATA_REFRESH,
-            })
-          );
-          dispatch(authUpdateFirstName(data.firstName));
-          return data;
-        })
-        .catch((error) => {
-          dispatch(profileError(error.statusText || error.message));
-          throw error;
-        });
-    })
+  return fetchLogin(credentials)
     .catch((error) => {
       dispatch(authError(error.statusText || error.message));
       throw error;
+    })
+    .then(async (token) => {
+      dispatch(profilePending("get"));
+      return fetchGetProfile(token)
+        .catch((error) => {
+          dispatch(profileError(error.statusText || error.message));
+          throw error;
+        })
+        .then((data) => {
+          dispatch(authSuccess({ token, remember }));
+          dispatch(profileSuccess(data));
+          dispatch(authUpdateFirstName(data.firstName));
+          return { status: "success", token, user: data };
+        });
     });
 };
 
@@ -74,6 +67,7 @@ export const signOut = () => async (dispatch) => {
   await fake();
   dispatch(authDisconnected());
   dispatch(profileClear());
+  return { status: "disconnected" };
 };
 
 /**
@@ -113,7 +107,7 @@ const userLayout = async (dispatch, getState, api, action, ...args) => {
  * @returns {Promise}
  */
 export const userLoad = () => async (dispatch, getState) =>
-  userLayout(dispatch, getState, getUserProfile, "get");
+  userLayout(dispatch, getState, fetchGetProfile, "get");
 
 /**
  * Fonction de de modification des données de l'utilisateur connecté
@@ -125,4 +119,4 @@ export const userLoad = () => async (dispatch, getState) =>
  * @returns {Promise}
  */
 export const userUpdate = (profile) => async (dispatch, getState) =>
-  userLayout(dispatch, getState, updateUserProfile, "update", profile);
+  userLayout(dispatch, getState, fetchUpdateProfile, "update", profile);

@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import { signIn } from "../../redux/actions";
 import { useAuthSelector } from "../../redux/hooks";
 import { authClearError } from "../../redux/slices/authSlice";
-import { promiseError } from "../../utils/consts";
 import Smoke from "../Smoke";
 
 function SignIn({ to }) {
@@ -22,13 +21,18 @@ function SignIn({ to }) {
     };
     const remember = e.target["remember"].checked;
 
-    toast
-      .promise(dispatch(signIn(credentials, remember)), {
+    try {
+      await toast.promise(dispatch(signIn(credentials, remember)), {
         pending: "Connecting...",
         success: "Your are connected successfully !",
-        error: promiseError,
-      })
-      .then(() => navigate(to));
+        error: {
+          render: (error) => error.data.statusText || error.data.message,
+        },
+      });
+      navigate(to);
+    } catch (error) {
+      // No report error
+    }
   };
 
   const handleChange = () => {

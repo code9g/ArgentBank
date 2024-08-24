@@ -17,8 +17,8 @@ function ProfileEdit({ close }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    toast
-      .promise(
+    try {
+      await toast.promise(
         dispatch(
           userUpdate({
             firstName: e.target["firstName"].value,
@@ -30,8 +30,11 @@ function ProfileEdit({ close }) {
           success: "Your profile has been successfully updated",
           error: promiseError,
         }
-      )
-      .then(close);
+      );
+      close();
+    } catch (error) {
+      // No report error
+    }
   };
 
   const handleChange = () => {
