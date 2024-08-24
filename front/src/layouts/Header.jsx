@@ -1,9 +1,22 @@
 import { Link, NavLink } from "react-router-dom";
 import logo from "../assets/img/argentBankLogo.png";
+
+import { toast } from "react-toastify";
+import { signOut } from "../redux/actions";
 import { useAuthSelector } from "../redux/hooks";
+import { promiseError } from "../utils/consts";
 
 function Header() {
-  const { token, firstName } = useAuthSelector();
+  const { isAuth, firstName } = useAuthSelector();
+
+  const logout = (e) => {
+    e.preventDefault();
+    toast.promise(signOut(), {
+      pending: "Disconnecting...",
+      success: "You are logged out",
+      error: promiseError,
+    });
+  };
 
   return (
     <nav className="main-nav">
@@ -16,15 +29,22 @@ function Header() {
         <h1 className="sr-only">Argent Bank</h1>
       </Link>
       <div>
-        <NavLink className="main-nav-item" to={token ? "/user" : "/sign-in"}>
-          <i className="fa fa-user-circle"></i>
-          {token ? firstName : "Sign In"}
-        </NavLink>
-        {token && (
-          <Link className="main-nav-item" to="/sign-out">
-            <i className="fa fa-sign-out"></i>
-            Sign Out
-          </Link>
+        {isAuth ? (
+          <>
+            <NavLink className="main-nav-item" to="/user">
+              <i className="fa fa-user-circle"></i>
+              {firstName || "Compte"}
+            </NavLink>
+            <Link className="main-nav-item" to="/sign-out" onClick={logout}>
+              <i className="fa fa-sign-out"></i>
+              Sign Out
+            </Link>
+          </>
+        ) : (
+          <NavLink className="main-nav-item" to={isAuth ? "/user" : "/sign-in"}>
+            <i className="fa fa-user-circle"></i>
+            Sign In
+          </NavLink>
         )}
       </div>
     </nav>

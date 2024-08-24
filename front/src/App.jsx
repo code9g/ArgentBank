@@ -12,7 +12,6 @@ import Private from "./layouts/Private";
 import Error from "./pages/Error";
 import Home from "./pages/Home";
 import LogIn from "./pages/LogIn";
-import LogOut from "./pages/LogOut";
 import NotFound from "./pages/NotFound";
 import User from "./pages/User";
 
@@ -24,7 +23,6 @@ const routes = createRoutesFromElements(
       <Route path="user" element={<Private />}>
         <Route index element={<User />} />
       </Route>
-      <Route path="sign-out" element={<LogOut />} />
       <Route path="*" element={<NotFound />} />
     </Route>
   </Route>

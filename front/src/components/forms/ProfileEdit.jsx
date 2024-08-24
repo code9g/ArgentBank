@@ -2,13 +2,13 @@ import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { userUpdate } from "../../redux/actions";
-import { useAuthSelector, useProfileSelector } from "../../redux/hooks";
+import { useProfileSelector } from "../../redux/hooks";
 import { profileError } from "../../redux/slices/profileSlice";
 import { promiseError } from "../../utils/consts";
 
 function ProfileEdit({ close }) {
-  const { token } = useAuthSelector(toast);
   const {
+    isError,
     error,
     user: { firstName, lastName },
   } = useProfileSelector();
@@ -19,12 +19,10 @@ function ProfileEdit({ close }) {
     e.preventDefault();
     toast
       .promise(
-        dispatch(
-          userUpdate(token, {
-            firstName: e.target["firstName"].value,
-            lastName: e.target["lastName"].value,
-          })
-        ),
+        userUpdate({
+          firstName: e.target["firstName"].value,
+          lastName: e.target["lastName"].value,
+        }),
         {
           pending: "Updating...",
           success: "Your profile has been successfully updated",
@@ -73,7 +71,7 @@ function ProfileEdit({ close }) {
           Cancel
         </button>
       </div>
-      {error && <div className="error">{error}</div>}
+      {isError && <div className="error">{error}</div>}
     </form>
   );
 }

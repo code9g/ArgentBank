@@ -6,8 +6,10 @@ import { createSlice } from "@reduxjs/toolkit";
  * @type {{ isFetching: boolean; error: string | null; user: {id: string?, createdAt: string?, updatedAt: string?, email: string?, firstName: string?, lastName: string?}}}
  */
 const initialState = {
-  isFetching: false,
+  action: null,
+  status: "iddle",
   error: null,
+  expireAt: null,
 
   user: {
     id: null,
@@ -28,39 +30,42 @@ export const profileSlice = createSlice({
   name: "profile",
   initialState,
   reducers: {
-    profileFetching: (state) => {
+    profileFetching: (state, { payload: action }) => {
       state.isFetching = true;
-    },
-
-    profileSuccess: (state, { payload }) => {
+      state.expireAt = null;
+      state.action = action;
+      state.status = "pending";
       state.error = null;
-
-      state.user.id = payload.id;
-      state.user.createdAt = payload.createdAt;
-      state.user.updatedAt = payload.createdAt;
-      state.user.email = payload.email;
-      state.user.firstName = payload.firstName;
-      state.user.lastName = payload.lastName;
     },
 
-    profileError: (state, { payload }) => {
-      state.error = payload;
+    profileSuccess: (state, { payload: { user, expireAt } }) => {
+      state.error = null;
+      state.expireAt = expireAt;
+      state.status = "success";
+      state.user.id = user.id;
+      state.user.createdAt = user.createdAt;
+      state.user.updatedAt = user.createdAt;
+      state.user.email = user.email;
+      state.user.firstName = user.firstName;
+      state.user.lastName = user.lastName;
     },
 
-    profileUpdate: (state, { payload }) => {
-      state.user.id = payload.id;
-      state.user.createdAt = payload.createdAt;
-      state.user.updatedAt = payload.createdAt;
-      state.user.email = payload.email;
-      state.user.firstName = payload.firstName;
-      state.user.lastName = payload.lastName;
+    profileError: (state, { payload: error }) => {
+      state.status = "error";
+      state.error = error;
     },
 
-    profileDone: (state) => {
-      state.isFetching = false;
+    profileUpdate: (state, { payload: user }) => {
+      state.user.id = user.id;
+      state.user.createdAt = user.createdAt;
+      state.user.updatedAt = user.createdAt;
+      state.user.email = user.email;
+      state.user.firstName = user.firstName;
+      state.user.lastName = user.lastName;
     },
 
     profileClear: (state) => {
+      state.status = "iddle";
       state.error = null;
       state.user.id = null;
       state.user.createdAt = null;
@@ -81,7 +86,6 @@ export const {
   profileFetching,
   profileSuccess,
   profileError,
-  profileDone,
   profileUpdate,
   profileClear,
 } = profileSlice.actions;

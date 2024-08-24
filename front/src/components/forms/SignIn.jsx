@@ -4,14 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { signIn } from "../../redux/actions";
 import { useAuthSelector } from "../../redux/hooks";
-import { authError } from "../../redux/slices/authSlice";
+import { authClearError } from "../../redux/slices/authSlice";
 import { promiseError } from "../../utils/consts";
 import Smoke from "../Smoke";
 
 function SignIn({ to }) {
-  const { isFetching, error } = useAuthSelector();
-  const navigate = useNavigate();
+  const { isPending, isError, error } = useAuthSelector();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,7 +23,7 @@ function SignIn({ to }) {
     const remember = e.target["remember"].checked;
 
     toast
-      .promise(dispatch(signIn(credentials, remember)), {
+      .promise(signIn(credentials, remember), {
         pending: "Connecting...",
         success: "Your are connected successfully !",
         error: promiseError,
@@ -32,15 +32,17 @@ function SignIn({ to }) {
   };
 
   const handleChange = () => {
-    dispatch(authError(null));
+    if (isError) {
+      dispatch(authClearError());
+    }
   };
 
   return (
     <form name="sign-in" className="sign-in-form" onSubmit={handleSubmit}>
-      {isFetching && <Smoke />}
+      {isPending && <Smoke />}
       <i className="fa fa-user-circle sign-in-icon"></i>
       <h1>Sign In</h1>
-      <div className={`sign-in-error ${error ? "show" : ""}`}>
+      <div className={`sign-in-error ${isError ? "show" : ""}`}>
         {error || "Unexpected error !"}
       </div>
       <div className="input-text">
@@ -50,6 +52,7 @@ function SignIn({ to }) {
           id="username"
           onChange={handleChange}
           minLength={2}
+          defaultValue="tony@stark.com"
           required
         />
       </div>
@@ -59,6 +62,7 @@ function SignIn({ to }) {
           type="password"
           id="password"
           onChange={handleChange}
+          defaultValue="password123"
           minLength={2}
           required
         />

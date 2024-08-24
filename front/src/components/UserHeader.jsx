@@ -6,7 +6,7 @@ function UserHeader() {
   const [isEditing, setIsEditing] = useState(false);
 
   const {
-    isFetching,
+    isPending,
     user: { firstName, lastName },
   } = useProfileSelector();
 
@@ -23,7 +23,7 @@ function UserHeader() {
               <br />
               {firstName || lastName ? (
                 firstName + " " + lastName
-              ) : isFetching ? (
+              ) : isPending ? (
                 <i className="waiting">Waiting data...</i>
               ) : (
                 "Missing data"

@@ -6,6 +6,7 @@ import { createSlice } from "@reduxjs/toolkit";
  * @type {{ isFetching: boolean; error: string | null; remember: boolean; token: string | null; firstName: string | null; }}
  */
 const initialState = {
+  status: "iddle",
   isFetching: false,
   error: null,
 
@@ -18,6 +19,7 @@ const initialState = {
 // (situation où l'utilisateur a opté pour "Remember me")
 const token = localStorage.getItem("token");
 if (token) {
+  initialState.status = "success";
   initialState.remember = true;
   initialState.token = token;
   initialState.firstName = localStorage.getItem("firstName");
@@ -34,18 +36,21 @@ export const authSlice = createSlice({
   reducers: {
     authFetching: (state) => {
       state.isFetching = true;
+      state.status = "pending";
     },
 
-    authSuccess: (state, { payload }) => {
+    authSuccess: (state, { payload: { token, remember } }) => {
+      state.status = "success";
       state.error = null;
-      state.token = payload.token;
-      state.remember = payload.remember;
-      if (payload.remember) {
-        localStorage.setItem("token", payload.token);
+      state.token = token;
+      state.remember = remember;
+      if (remember) {
+        localStorage.setItem("token", token);
       }
     },
 
     authDisconnected: (state) => {
+      state.status = "disconnected";
       localStorage.clear();
       state.token = null;
       state.firstName = null;
@@ -53,17 +58,19 @@ export const authSlice = createSlice({
     },
 
     authError: (state, { payload: error }) => {
+      state.status = "error";
       state.error = error;
     },
 
-    authDone: (state) => {
-      state.isFetching = false;
+    authClearError: (state) => {
+      state.status = "iddle";
+      state.error = null;
     },
 
-    authUpdateFirstName: (state, { payload }) => {
-      state.firstName = payload;
+    authUpdateFirstName: (state, { payload: firstName }) => {
+      state.firstName = firstName;
       if (state.remember) {
-        localStorage.setItem("firstName", payload);
+        localStorage.setItem("firstName", firstName);
       }
     },
   },
@@ -80,7 +87,7 @@ export const {
   authDisconnecting,
   authDisconnected,
   authError,
-  authDone,
+  authClearError,
   authUpdateFirstName,
 } = authSlice.actions;
 

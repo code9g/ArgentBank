@@ -1,45 +1,49 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import Account from "../components/Account";
 import Smoke from "../components/Smoke";
 import Title from "../components/Title";
 import UserHeader from "../components/UserHeader";
 import { userLoad } from "../redux/actions";
-import { useAuthSelector, useProfileSelector } from "../redux/hooks";
+import { useProfileSelector } from "../redux/hooks";
 import {
   accounts,
   INTERVAL_USER_DATA_REFRESH,
   promiseError,
 } from "../utils/consts";
 
+const toastify = (text) => {
+  toast.promise(userLoad(), {
+    pending: text,
+    success: "Your data has been retrieved",
+    error: promiseError,
+  });
+};
+
 function User() {
-  const { token } = useAuthSelector();
-  const { isFetching } = useProfileSelector();
-  const dispatch = useDispatch();
+  const { isPending, timeLeft, status } = useProfileSelector();
 
   useEffect(() => {
-    const toastify = (text) => {
-      toast.promise(dispatch(userLoad(token)), {
-        pending: text,
-        success: "Your data has been retrieved",
-        error: promiseError,
-      });
-    };
+    if (status !== "pending") {
+      let handle = null;
 
-    toastify("Retrieving your data...");
-
-    const handle = setInterval(() => {
-      toastify("Refreshing your profile data...");
-    }, INTERVAL_USER_DATA_REFRESH);
-
-    return () => clearInterval(handle);
-  }, [token, dispatch]);
+      const timeoutTrigger = () => {
+        toastify("Refreshing your profile data...");
+        handle = setTimeout(timeoutTrigger, INTERVAL_USER_DATA_REFRESH);
+      };
+      if (timeLeft > 0) {
+        handle = setTimeout(timeoutTrigger, timeLeft);
+      } else {
+        timeoutTrigger();
+      }
+      return () => clearTimeout(handle);
+    }
+  }, [timeLeft, status]);
 
   return (
     <>
       <Title>User</Title>
-      {isFetching && <Smoke />}
+      {isPending && <Smoke />}
       <main className="main bg-dark">
         <UserHeader />
         <h2 className="sr-only">Accounts</h2>

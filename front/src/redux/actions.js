@@ -4,10 +4,9 @@ import {
   loginUser,
   updateUserProfile,
 } from "../services/api";
-import { FAKE_NETWORK } from "../utils/consts";
+import { FAKE_NETWORK, INTERVAL_USER_DATA_REFRESH } from "../utils/consts";
 import {
   authDisconnected,
-  authDone,
   authError,
   authFetching,
   authSuccess,
@@ -15,11 +14,13 @@ import {
 } from "./slices/authSlice";
 import {
   profileClear,
-  profileDone,
   profileError,
   profileFetching,
   profileSuccess,
 } from "./slices/profileSlice";
+import store from "./store";
+
+const { dispatch, getState } = store;
 
 const fake = async () =>
   import.meta.env.DEV && FAKE_NETWORK.active
@@ -33,39 +34,49 @@ const fake = async () =>
  * @param {string} credentials.email e-mail de l'utilisateur
  * @param {string} credentials.password Mot de passe de l'utilisateur
  * @param {boolean} remember Indique si l'on doit stocker le token en tant que cookies
- * @returns {(dispatch: any) => any}
+ * @returns {Promise}
  */
-export const signIn = (credentials, remember) => async (dispatch) => {
+export const signIn = async (credentials, remember) => {
   dispatch(authFetching());
   await fake();
   return loginUser(credentials)
     .then(async (data) => {
       const token = data.token;
-      return userLayout(dispatch, getUserProfile, token).then((data) => {
-        dispatch(authSuccess({ token, firstName: data.firstName, remember }));
-        return data;
-      });
+      dispatch(profileFetching("get"));
+      await fake();
+      return getUserProfile(token)
+        .then((data) => {
+          dispatch(authSuccess({ token, remember }));
+          dispatch(
+            profileSuccess({
+              user: data,
+              expireAt: Date.now() + INTERVAL_USER_DATA_REFRESH,
+            })
+          );
+          dispatch(authUpdateFirstName(data.firstName));
+          return data;
+        })
+        .catch((error) => {
+          dispatch(profileError(error.statusText || error.message));
+          throw error;
+        });
     })
     .catch((error) => {
       dispatch(authError(error.statusText || error.message));
       throw error;
-    })
-    .finally(() => {
-      dispatch(authDone());
     });
 };
 
 /**
  * Fonction de déconnexion
  *
- * @returns {(dispatch: any) => any}
+ * @returns {Promise}
  */
-export const signOut = () => async (dispatch) => {
+export const signOut = async () => {
   dispatch(authFetching());
   await fake();
   dispatch(authDisconnected());
   dispatch(profileClear());
-  dispatch(authDone());
 };
 
 /**
@@ -73,17 +84,22 @@ export const signOut = () => async (dispatch) => {
  * (cf. swagger.yaml)
  *
  * @async
- * @param {Function} dispatch fonction de dispatch de useDispatch de rédux
  * @param {Function} api
  * @param {...{}} args
  * @return {Promise}
  */
-const userLayout = async (dispatch, api, ...args) => {
-  dispatch(profileFetching());
+const userLayout = async (api, action, ...args) => {
+  const token = getState().auth.token;
+  dispatch(profileFetching(action));
   await fake();
-  return api(...args)
+  return api(token, ...args)
     .then((data) => {
-      dispatch(profileSuccess(data));
+      dispatch(
+        profileSuccess({
+          user: data,
+          expireAt: Date.now() + INTERVAL_USER_DATA_REFRESH,
+        })
+      );
       dispatch(authUpdateFirstName(data.firstName));
       return data;
     })
@@ -91,31 +107,24 @@ const userLayout = async (dispatch, api, ...args) => {
       // TODO: En cas d'erreur "401 - Unauthorized", faudrait-il déconnecter l'utilisateur ?
       dispatch(profileError(error.statusText || error.message));
       throw error;
-    })
-    .finally(() => {
-      dispatch(profileDone());
     });
 };
 
 /**
  * Fonction de récupération des données de l'utilisateur connecté
- * en utilisant le token d'authentification
  *
- * @param {string} token Jeton d'authentification
- * @returns {(dispatch: any) => unknown}
+ * @returns {Promise}
  */
-export const userLoad = (token) => async (dispatch) =>
-  userLayout(dispatch, getUserProfile, token);
+export const userLoad = () => userLayout(getUserProfile, "get");
 
 /**
  * Fonction de de modification des données de l'utilisateur connecté
  * en utilisant le token d'authentification
  *
- * @param {string} token Jeton d'authentification
  * @param {Object} profile Les informations à modifier (seul le prénom et le nom sont modifiables)
  * @param {string} profile.firstName
  * @param {string} profile.lastName
- * @returns {(dispatch: any) => unknown}
+ * @returns {Promise}
  */
-export const userUpdate = (token, profile) => async (dispatch) =>
-  userLayout(dispatch, updateUserProfile, token, profile);
+export const userUpdate = async (profile) =>
+  userLayout(updateUserProfile, "update", profile);
