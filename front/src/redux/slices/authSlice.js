@@ -3,11 +3,10 @@ import { createSlice } from "@reduxjs/toolkit";
 /**
  * Données initiales de l'état de connexion (loginSlice)
  *
- * @type {{ isFetching: boolean; error: string | null; remember: boolean; token: string | null; firstName: string | null; }}
+ * @type {{ status: string | null; error: string | null; remember: boolean; token: string | null; firstName: string | null; }}
  */
 const initialState = {
   status: "iddle",
-  isFetching: false,
   error: null,
 
   remember: false,
@@ -35,7 +34,6 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     authPending: (state) => {
-      state.isFetching = true;
       state.status = "pending";
     },
 

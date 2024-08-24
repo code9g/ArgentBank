@@ -4,7 +4,7 @@ import { INTERVAL_USER_DATA_REFRESH } from "../../utils/consts";
 /**
  * Données initiales de l'état de connexion (profileSlice)
  *
- * @type {{ isFetching: boolean; error: string | null; user: {id: string?, createdAt: string?, updatedAt: string?, email: string?, firstName: string?, lastName: string?}}}
+ * @type {{ action: string | null; status: string | null;  error: string | null; expireAt: integer; user: {id: string?, createdAt: string?, updatedAt: string?, email: string?, firstName: string?, lastName: string?}}}
  */
 const initialState = {
   action: null,
@@ -32,7 +32,6 @@ export const profileSlice = createSlice({
   initialState,
   reducers: {
     profilePending: (state, { payload: action }) => {
-      state.isFetching = true;
       state.expireAt = null;
       state.action = action;
       state.status = "pending";
