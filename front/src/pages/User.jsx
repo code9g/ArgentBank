@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import Account from "../components/Account";
 import Smoke from "../components/Smoke";
@@ -12,20 +13,21 @@ import {
   promiseError,
 } from "../utils/consts";
 
-const toastify = (text) => {
-  toast.promise(userLoad(), {
-    pending: text,
-    success: "Your data has been retrieved",
-    error: promiseError,
-  });
-};
-
 function User() {
   const { isPending, timeLeft, status } = useProfileSelector();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (status !== "pending") {
       let handle = null;
+
+      const toastify = (text) => {
+        toast.promise(dispatch(userLoad()), {
+          pending: text,
+          success: "Your data has been retrieved",
+          error: promiseError,
+        });
+      };
 
       const timeoutTrigger = () => {
         toastify("Refreshing your profile data...");
@@ -38,7 +40,7 @@ function User() {
       }
       return () => clearTimeout(handle);
     }
-  }, [timeLeft, status]);
+  }, [timeLeft, dispatch, status]);
 
   return (
     <>

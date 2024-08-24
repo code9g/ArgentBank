@@ -18,9 +18,6 @@ import {
   profileFetching,
   profileSuccess,
 } from "./slices/profileSlice";
-import store from "./store";
-
-const { dispatch, getState } = store;
 
 const fake = async () =>
   import.meta.env.DEV && FAKE_NETWORK.active
@@ -36,7 +33,7 @@ const fake = async () =>
  * @param {boolean} remember Indique si l'on doit stocker le token en tant que cookies
  * @returns {Promise}
  */
-export const signIn = async (credentials, remember) => {
+export const signIn = (credentials, remember) => async (dispatch) => {
   dispatch(authFetching());
   await fake();
   return loginUser(credentials)
@@ -72,7 +69,7 @@ export const signIn = async (credentials, remember) => {
  *
  * @returns {Promise}
  */
-export const signOut = async () => {
+export const signOut = () => async (dispatch) => {
   dispatch(authFetching());
   await fake();
   dispatch(authDisconnected());
@@ -88,7 +85,7 @@ export const signOut = async () => {
  * @param {...{}} args
  * @return {Promise}
  */
-const userLayout = async (api, action, ...args) => {
+const userLayout = async (dispatch, getState, api, action, ...args) => {
   const token = getState().auth.token;
   dispatch(profileFetching(action));
   await fake();
@@ -115,7 +112,8 @@ const userLayout = async (api, action, ...args) => {
  *
  * @returns {Promise}
  */
-export const userLoad = () => userLayout(getUserProfile, "get");
+export const userLoad = () => async (dispatch, getState) =>
+  userLayout(dispatch, getState, getUserProfile, "get");
 
 /**
  * Fonction de de modification des données de l'utilisateur connecté
@@ -126,5 +124,5 @@ export const userLoad = () => userLayout(getUserProfile, "get");
  * @param {string} profile.lastName
  * @returns {Promise}
  */
-export const userUpdate = async (profile) =>
-  userLayout(updateUserProfile, "update", profile);
+export const userUpdate = (profile) => async (dispatch, getState) =>
+  userLayout(dispatch, getState, updateUserProfile, "update", profile);

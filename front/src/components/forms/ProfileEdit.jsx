@@ -19,10 +19,12 @@ function ProfileEdit({ close }) {
     e.preventDefault();
     toast
       .promise(
-        userUpdate({
-          firstName: e.target["firstName"].value,
-          lastName: e.target["lastName"].value,
-        }),
+        dispatch(
+          userUpdate({
+            firstName: e.target["firstName"].value,
+            lastName: e.target["lastName"].value,
+          })
+        ),
         {
           pending: "Updating...",
           success: "Your profile has been successfully updated",

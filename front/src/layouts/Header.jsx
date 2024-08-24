@@ -1,6 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
 import logo from "../assets/img/argentBankLogo.png";
 
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { signOut } from "../redux/actions";
 import { useAuthSelector } from "../redux/hooks";
@@ -8,10 +9,11 @@ import { promiseError } from "../utils/consts";
 
 function Header() {
   const { isAuth, firstName } = useAuthSelector();
+  const dispatch = useDispatch();
 
   const logout = (e) => {
     e.preventDefault();
-    toast.promise(signOut(), {
+    toast.promise(dispatch(signOut()), {
       pending: "Disconnecting...",
       success: "You are logged out",
       error: promiseError,

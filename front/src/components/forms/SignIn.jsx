@@ -23,7 +23,7 @@ function SignIn({ to }) {
     const remember = e.target["remember"].checked;
 
     toast
-      .promise(signIn(credentials, remember), {
+      .promise(dispatch(signIn(credentials, remember)), {
         pending: "Connecting...",
         success: "Your are connected successfully !",
         error: promiseError,
