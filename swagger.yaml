@@ -258,14 +258,13 @@ paths:
           description: Transaction not found
         "500":
           description: Internal Server Error
-  /transactions/{transactionId}/category:
     patch:
       security:
         - Bearer: []
       tags:
         - Transactions module
-      summary: Update the category field of a transaction
-      description: API for updates the category field of an authenticated user's transaction
+      summary: Update the category and/or notes field of a transaction
+      description: API for updates the category and/or fields of an authenticated user's transaction
       parameters:
         - in: path
           name: transactionId
@@ -279,50 +278,10 @@ paths:
           required: true
         - in: body
           name: body
-          description: Category field to update
+          description: Category and/or notes fields to update
           required: true
           schema:
-            $ref: "#/definitions/TransactionCategoryUpdate"
-      produces:
-        - application/json
-      responses:
-        "200":
-          description: Transaction successfully updated
-          schema:
-            $ref: "#/definitions/TransactionResponse"
-        "400":
-          description: Invalid fields
-        "401":
-          description: Authorization error
-        "404":
-          description: Transaction not found
-        "500":
-          description: Internal Server Error
-  /transactions/{transactionId}/notes:
-    patch:
-      security:
-        - Bearer: []
-      tags:
-        - Transactions module
-      summary: Update the notes field of a transaction
-      description: API for updates the notes field of an authenticated user's transaction
-      parameters:
-        - in: path
-          name: transactionId
-          description: Transaction id
-          required: true
-          type: string
-        - in: header
-          type: string
-          name: Authorization
-          description: Attach Bearer JWT token
-          required: true
-        - in: body
-          name: body
-          description: Notes field to update
-          required: true
-          schema:
-            $ref: "#/definitions/TransactionCategoryUpdate"
+            $ref: "#/definitions/TransactionUpdate"
       produces:
         - application/json
       responses:
@@ -503,15 +462,12 @@ definitions:
         type: string
       notes:
         type: string
-  TransactionCategoryUpdate:
+  TransactionUpdate:
     type: object
     properties:
       category:
         type: string
         description: transaction category
-  TransactionNotesUpdate:
-    type: object
-    properties:
       notes:
         type: string
         description: transaction notes
