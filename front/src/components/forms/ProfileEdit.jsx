@@ -61,7 +61,7 @@ function ProfileEdit({ close }) {
           Cancel
         </button>
       </div>
-      {isError && <div className="error">{error}</div>}
+      {isError && <div className="error">{error.message}</div>}
     </form>
   );
 }

@@ -1,6 +1,9 @@
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import { useLoginMutation } from "../../redux/services/bankApi";
+import {
+  useGetProfileMutation,
+  useLoginMutation,
+} from "../../redux/services/bankApi";
 
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
@@ -9,6 +12,7 @@ import Smoke from "../Smoke";
 
 function SignIn({ to }) {
   const [login, { isPending, isError, error }] = useLoginMutation();
+  const [getProfile] = useGetProfileMutation();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,7 +28,11 @@ function SignIn({ to }) {
     toast.promise(
       login(credentials)
         .unwrap()
-        .then(() => navigate(to)),
+        .then((token) =>
+          getProfile(token)
+            .unwrap()
+            .then(() => navigate(to))
+        ),
       {
         pending: "Connecting...",
         success: "You are successfully logged...",

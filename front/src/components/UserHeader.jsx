@@ -18,7 +18,11 @@ function UserHeader() {
           {isEditing || (
             <>
               <br />
-              {`${user?.firstName} ${user?.lastName}`}
+              <span className={"title" + (user ? "" : "-error")}>
+                {user
+                  ? `${user.firstName} ${user.lastName}`
+                  : "Waiting to retrieve profile data"}
+              </span>
             </>
           )}
         </h1>
