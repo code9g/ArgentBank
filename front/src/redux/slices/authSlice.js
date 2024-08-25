@@ -1,4 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import {
+  ERROR_STATUS,
+  IDLE_STATUS,
+  PENDING_STATUS,
+  SIGNIN_ACTION,
+  SUCCESS_STATUS,
+} from "../../utils/consts";
 
 /**
  * Données initiales de l'état de connexion (loginSlice)
@@ -6,7 +13,8 @@ import { createSlice } from "@reduxjs/toolkit";
  * @type {{ status: string | null; error: string | null; remember: boolean; token: string | null; firstName: string | null; }}
  */
 const initialState = {
-  status: "iddle",
+  action: null,
+  status: IDLE_STATUS,
   error: null,
 
   remember: false,
@@ -18,7 +26,8 @@ const initialState = {
 // (situation où l'utilisateur a opté pour "Remember me")
 const token = localStorage.getItem("token");
 if (token) {
-  initialState.status = "success";
+  initialState.action = SIGNIN_ACTION;
+  initialState.status = SUCCESS_STATUS;
   initialState.remember = true;
   initialState.token = token;
   initialState.firstName = localStorage.getItem("firstName");
@@ -33,35 +42,35 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    authPending: (state) => {
-      state.status = "pending";
+    authPending: (state, { payload: action }) => {
+      state.action = action;
+      state.status = PENDING_STATUS;
     },
 
-    authSuccess: (state, { payload: { token, remember } }) => {
-      state.status = "success";
-      state.error = null;
-      state.token = token;
-      state.remember = remember;
-      if (remember) {
-        localStorage.setItem("token", token);
+    authSuccess: (state, { payload }) => {
+      state.status = SUCCESS_STATUS;
+      if (payload) {
+        const { token, remember } = payload;
+        state.token = token;
+        state.remember = remember;
+        if (remember) {
+          localStorage.setItem("token", token);
+        }
+      } else {
+        localStorage.clear();
+        state.token = null;
+        state.remember = null;
       }
-    },
-
-    authDisconnected: (state) => {
-      state.status = "disconnected";
-      localStorage.clear();
-      state.token = null;
-      state.firstName = null;
-      state.remember = false;
+      state.error = null;
     },
 
     authError: (state, { payload: error }) => {
-      state.status = "error";
+      state.status = ERROR_STATUS;
       state.error = error;
     },
 
     authClearError: (state) => {
-      state.status = "iddle";
+      state.status = IDLE_STATUS;
       state.error = null;
     },
 
@@ -80,10 +89,9 @@ export const authSlice = createSlice({
  * @type {ActionCreator}
  */
 export const {
+  authAction,
   authPending,
   authSuccess,
-  authDisconnecting,
-  authDisconnected,
   authError,
   authClearError,
   authUpdateFirstName,

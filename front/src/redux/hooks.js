@@ -1,4 +1,10 @@
 import { useSelector } from "react-redux";
+import {
+  ERROR_STATUS,
+  IDLE_STATUS,
+  PENDING_STATUS,
+  SUCCESS_STATUS,
+} from "../utils/consts";
 
 /**
  * Fonction d'extraction du state d'authentification
@@ -15,6 +21,13 @@ export const authSelector = (state) => state.auth;
  */
 export const profileSelector = (state) => state.profile;
 
+const unwrap = (state) => ({
+  isIdle: state.status === IDLE_STATUS,
+  isPending: state.status === PENDING_STATUS,
+  isError: state.status === ERROR_STATUS,
+  isSuccess: state.status === SUCCESS_STATUS,
+});
+
 /**
  * Alias du hook useSelector(authSelector) pour récupérer les informations d'authentification
  *
@@ -25,9 +38,7 @@ export const useAuthSelector = () => {
   return {
     ...selector,
     isAuth: selector.token !== null,
-    isPending: selector.status === "pending",
-    isError: selector.status === "error",
-    isSuccess: selector.status === "success",
+    ...unwrap(selector),
   };
 };
 
@@ -44,9 +55,7 @@ export const useProfileSelector = () => {
   }
   return {
     ...selector,
-    isPending: selector.status === "pending",
-    isError: selector.status === "error",
-    isSuccess: selector.status === "success",
+    ...unwrap(selector),
     expired: timeLeft !== null && timeLeft <= 0,
     timeLeft: timeLeft,
   };

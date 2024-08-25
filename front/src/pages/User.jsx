@@ -5,7 +5,7 @@ import Account from "../components/Account";
 import Smoke from "../components/Smoke";
 import Title from "../components/Title";
 import UserHeader from "../components/UserHeader";
-import { userLoad } from "../redux/actions";
+import { getProfile } from "../redux/actions";
 import { useProfileSelector } from "../redux/hooks";
 import {
   accounts,
@@ -22,7 +22,7 @@ function User() {
       let handle = null;
 
       const toastify = (text) => {
-        toast.promise(dispatch(userLoad()), {
+        toast.promise(dispatch(getProfile()), {
           pending: text,
           success: "Your data has been retrieved",
           error: promiseError,

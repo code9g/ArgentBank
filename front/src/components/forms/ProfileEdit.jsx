@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { userUpdate } from "../../redux/actions";
+import { updateProfile } from "../../redux/actions";
 import { useProfileSelector } from "../../redux/hooks";
 import { profileError } from "../../redux/slices/profileSlice";
 import { promiseError } from "../../utils/consts";
@@ -20,7 +20,7 @@ function ProfileEdit({ close }) {
     try {
       await toast.promise(
         dispatch(
-          userUpdate({
+          updateProfile({
             firstName: e.target["firstName"].value,
             lastName: e.target["lastName"].value,
           })

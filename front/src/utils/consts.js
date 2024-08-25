@@ -20,6 +20,70 @@ export const FAKE_NETWORK = { active: false, delay: 500, random: 800 };
 export const INTERVAL_USER_DATA_REFRESH = 5 * 60 * 1000;
 
 /**
+ * Indicateur d'état d'envoie/chargement des données
+ * Cet état indique qu'il est inactif
+ *
+ * @type {"idle"}
+ */
+export const IDLE_STATUS = "idle";
+
+/**
+ * Indicateur d'état d'envoie/chargement des données
+ * Cet état indique qu'il a réalisé la tâche avec succès
+ *
+ * @type {"success"}
+ */
+export const SUCCESS_STATUS = "success";
+
+/**
+ * Indicateur d'état d'envoie/chargement des données
+ * Cet état indique qu'il y'a eu une erreur
+ *
+ * @type {"error"}
+ */
+export const ERROR_STATUS = "error";
+
+/**
+ * Indicateur d'état d'envoie/chargement des données
+ * Cet état indique qu'il est en train de réaliser la tâche.
+ *
+ * @type {"pending"}
+ */
+export const PENDING_STATUS = "pending";
+
+/**
+ * Indicateur de l'action à l'ogirine de la tâche qui indique
+ * un chargement des données
+ *
+ * @type {"get"}
+ */
+export const GET_ACTION = "get";
+
+/**
+ * Indicateur de l'action à l'ogirine de la tâche qui indique
+ * une modification des données
+ *
+ * @type {"put"}
+ */
+export const PUT_ACTION = "put";
+
+/**
+ * Indicateur de l'action à l'ogirine de la tâche qui indique
+ * une authentification de l'utilisateur
+ *
+ * @type {"signin"}
+ */
+export const SIGNIN_ACTION = "signin";
+
+/**
+ * Indicateur de l'action à l'ogirine de la tâche qui indique
+ * une déconnexion de l'utilisateur
+ *
+ * @type {"signout"}
+ */
+export const SIGNOUT_ACTION = "signout";
+
+/**
  * URL pour les requêtes à l'API de l'application
  *
  * @type {"http://localhost:3001/api/v1"}

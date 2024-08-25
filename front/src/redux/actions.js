@@ -4,9 +4,14 @@ import {
   fetchLogin,
   fetchUpdateProfile,
 } from "../services/api";
-import { FAKE_NETWORK } from "../utils/consts";
 import {
-  authDisconnected,
+  FAKE_NETWORK,
+  GET_ACTION,
+  PUT_ACTION,
+  SIGNIN_ACTION,
+  SIGNOUT_ACTION,
+} from "../utils/consts";
+import {
   authError,
   authPending,
   authSuccess,
@@ -34,7 +39,7 @@ const fake = async () =>
  * @returns {Promise}
  */
 export const signIn = (credentials, remember) => async (dispatch) => {
-  dispatch(authPending());
+  dispatch(authPending(SIGNIN_ACTION));
   await fake();
   return fetchLogin(credentials)
     .catch((error) => {
@@ -42,7 +47,7 @@ export const signIn = (credentials, remember) => async (dispatch) => {
       throw error;
     })
     .then(async (token) => {
-      dispatch(profilePending("get"));
+      dispatch(profilePending(GET_ACTION));
       return fetchGetProfile(token)
         .catch((error) => {
           dispatch(profileError(error.statusText || error.message));
@@ -52,7 +57,6 @@ export const signIn = (credentials, remember) => async (dispatch) => {
           dispatch(authSuccess({ token, remember }));
           dispatch(profileSuccess(data));
           dispatch(authUpdateFirstName(data.firstName));
-          return { status: "success", token, user: data };
         });
     });
 };
@@ -63,11 +67,10 @@ export const signIn = (credentials, remember) => async (dispatch) => {
  * @returns {Promise}
  */
 export const signOut = () => async (dispatch) => {
-  dispatch(authPending());
+  dispatch(authPending(SIGNOUT_ACTION));
   await fake();
-  dispatch(authDisconnected());
+  dispatch(authSuccess());
   dispatch(profileClear());
-  return { status: "disconnected" };
 };
 
 /**
@@ -101,8 +104,8 @@ const userLayout = async (dispatch, getState, api, action, ...args) => {
  *
  * @returns {Promise}
  */
-export const userLoad = () => async (dispatch, getState) =>
-  userLayout(dispatch, getState, fetchGetProfile, "get");
+export const getProfile = () => async (dispatch, getState) =>
+  userLayout(dispatch, getState, fetchGetProfile, GET_ACTION);
 
 /**
  * Fonction de de modification des données de l'utilisateur connecté
@@ -113,5 +116,5 @@ export const userLoad = () => async (dispatch, getState) =>
  * @param {string} profile.lastName
  * @returns {Promise}
  */
-export const userUpdate = (profile) => async (dispatch, getState) =>
-  userLayout(dispatch, getState, fetchUpdateProfile, "update", profile);
+export const updateProfile = (profile) => async (dispatch, getState) =>
+  userLayout(dispatch, getState, fetchUpdateProfile, PUT_ACTION, profile);
