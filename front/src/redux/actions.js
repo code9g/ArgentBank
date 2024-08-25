@@ -4,7 +4,7 @@ import {
   fetchLogin,
   fetchUpdateProfile,
 } from "../services/api";
-import { FAKE_NETWORK, INTERVAL_USER_DATA_REFRESH } from "../utils/consts";
+import { FAKE_NETWORK } from "../utils/consts";
 import {
   authDisconnected,
   authError,
@@ -85,12 +85,7 @@ const userLayout = async (dispatch, getState, api, action, ...args) => {
   await fake();
   return api(token, ...args)
     .then((data) => {
-      dispatch(
-        profileSuccess({
-          user: data,
-          expireAt: Date.now() + INTERVAL_USER_DATA_REFRESH,
-        })
-      );
+      dispatch(profileSuccess(data));
       dispatch(authUpdateFirstName(data.firstName));
       return data;
     })

@@ -44,7 +44,7 @@ export const profileSlice = createSlice({
       state.status = "success";
       state.user.id = user.id;
       state.user.createdAt = user.createdAt;
-      state.user.updatedAt = user.createdAt;
+      state.user.updatedAt = user.updatedAt;
       state.user.email = user.email;
       state.user.firstName = user.firstName;
       state.user.lastName = user.lastName;
@@ -53,15 +53,6 @@ export const profileSlice = createSlice({
     profileError: (state, { payload: error }) => {
       state.status = "error";
       state.error = error;
-    },
-
-    profileUpdate: (state, { payload: user }) => {
-      state.user.id = user.id;
-      state.user.createdAt = user.createdAt;
-      state.user.updatedAt = user.createdAt;
-      state.user.email = user.email;
-      state.user.firstName = user.firstName;
-      state.user.lastName = user.lastName;
     },
 
     profileClear: (state) => {
@@ -82,12 +73,7 @@ export const profileSlice = createSlice({
  *
  * @type {ActionCreator}
  */
-export const {
-  profilePending,
-  profileSuccess,
-  profileError,
-  profileUpdate,
-  profileClear,
-} = profileSlice.actions;
+export const { profilePending, profileSuccess, profileError, profileClear } =
+  profileSlice.actions;
 
 export default profileSlice.reducer;
