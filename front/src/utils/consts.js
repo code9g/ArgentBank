@@ -20,6 +20,14 @@ export const FAKE_NETWORK = { active: false, delay: 500, random: 800 };
 export const INTERVAL_USER_DATA_REFRESH = 5 * 60 * 1000;
 
 /**
+ * Durée de vie d'une authentification par défaut exprimé en ms.
+ * (Non implémenté pour le moment)
+ *
+ * @type {number}
+ */
+export const TIMEOUT_AUTHENTIFICATION = 30 * 60 * 1000;
+
+/**
  * Indicateur d'état d'envoie/chargement des données
  * Cet état indique qu'il est inactif
  *
