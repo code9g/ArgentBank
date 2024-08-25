@@ -1,57 +1,47 @@
 import PropTypes from "prop-types";
-import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { useProfileSelector } from "../../redux/hooks";
-import { profileClearError } from "../../redux/slices/profileSlice";
-import { updateProfile } from "../../redux/thunks";
-import { promiseError } from "../../utils/consts";
+import { useAuthSelector } from "../../redux/hooks";
+import { useUpdateProfileMutation } from "../../redux/services/bankApi";
+import Smoke from "../Smoke";
 
 function ProfileEdit({ close }) {
-  const {
-    isError,
-    error,
-    user: { firstName, lastName },
-  } = useProfileSelector();
+  const { user } = useAuthSelector();
 
-  const dispatch = useDispatch();
+  const [updateProfile, { isPending, isError, error }] =
+    useUpdateProfileMutation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const target = e.currentTarget;
     const profile = {
-      firstName: e.target["firstName"].value,
-      lastName: e.target["lastName"].value,
+      firstName: target["firstName"].value,
+      lastName: target["lastName"].value,
     };
-    try {
-      await toast.promise(dispatch(updateProfile(profile)).unwrap(), {
+
+    toast.promise(
+      updateProfile(profile)
+        .unwrap()
+        .then(() => close()),
+      {
         pending: "Updating...",
-        success: "Your profile has been successfully updated",
-        error: promiseError,
-      });
-      close();
-    } catch (error) {
-      // No report error
-    }
-  };
-
-  const handleChange = () => {
-    dispatch(profileClearError());
-  };
-
-  const handleCancel = () => {
-    dispatch(profileClearError());
-    close();
+        success: "Profile successfully updated !",
+        error: {
+          render: ({ data: error }) => error.message,
+        },
+      }
+    );
   };
 
   return (
     <form name="profile-edit" className="form-profile" onSubmit={handleSubmit}>
+      {isPending && <Smoke />}
       <div className="form-profile-grid">
         <input
           id="firstName"
           className="input-firstname"
           type="text"
-          placeholder={firstName}
-          defaultValue={firstName}
-          onChange={handleChange}
+          placeholder={user?.firstName}
+          defaultValue={user?.firstName}
           minLength={2}
           required
         />
@@ -59,16 +49,15 @@ function ProfileEdit({ close }) {
           id="lastName"
           className="input-lastname"
           type="text"
-          placeholder={lastName}
-          defaultValue={lastName}
-          onChange={handleChange}
+          placeholder={user?.lastName}
+          defaultValue={user?.lastName}
           minLength={2}
           required
         />
         <button className="save-button" type="submit">
           Save
         </button>
-        <button className="cancel-button" type="button" onClick={handleCancel}>
+        <button className="cancel-button" type="button" onClick={close}>
           Cancel
         </button>
       </div>

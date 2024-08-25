@@ -1,44 +1,38 @@
 import PropTypes from "prop-types";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../../redux/services/bankApi";
+
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { useAuthSelector } from "../../redux/hooks";
-import { authClearError } from "../../redux/slices/authSlice";
-import { signIn } from "../../redux/thunks";
-import { promiseError } from "../../utils/consts";
+import { setRemember } from "../../redux/slices/authSlice";
 import Smoke from "../Smoke";
 
 function SignIn({ to }) {
-  const { isPending, isError, error } = useAuthSelector();
+  const [login, { isPending, isError, error }] = useLoginMutation();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    const target = e.currentTarget;
     const credentials = {
-      email: e.target["username"].value,
-      password: e.target["password"].value,
+      email: target["username"].value,
+      password: target["password"].value,
     };
-    const remember = e.target["remember"].checked;
 
-    try {
-      await toast.promise(dispatch(signIn(credentials, remember)).unwrap(), {
-        pending: "Connecting...",
-        success: "Your are connected successfully !",
-        error: promiseError,
-      });
-      navigate(to);
-    } catch (error) {
-      // No report error
-    }
-  };
-
-  const handleChange = () => {
-    if (isError) {
-      dispatch(authClearError());
-    }
+    toast.promise(
+      login(credentials)
+        .unwrap()
+        .then(() => navigate(to)),
+      {
+        pending: "Connexion...",
+        success: "You are successfully logged...",
+        error: {
+          render: ({ data: error }) => error.message,
+        },
+      }
+    );
   };
 
   return (
@@ -47,30 +41,24 @@ function SignIn({ to }) {
       <i className="fa fa-user-circle sign-in-icon"></i>
       <h1>Sign In</h1>
       <div className={`sign-in-error ${isError ? "show" : ""}`}>
-        {error || "Unexpected error !"}
+        {error?.message || "Unexpected error !"}
       </div>
       <div className="input-text">
         <label htmlFor="username">Username</label>
-        <input
-          type="text"
-          id="username"
-          onChange={handleChange}
-          minLength={2}
-          required
-        />
+        <input type="text" id="username" minLength={2} required />
       </div>
       <div className="input-password">
         <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          onChange={handleChange}
-          minLength={2}
-          required
-        />
+        <input type="password" id="password" minLength={2} required />
       </div>
       <div className="input-checkbox">
-        <input type="checkbox" id="remember" onChange={handleChange} />
+        <input
+          type="checkbox"
+          id="remember"
+          onChange={(e) => {
+            dispatch(setRemember(e.currentTarget.checked));
+          }}
+        />
         <label htmlFor="remember">Remember me</label>
       </div>
       <button type="submit" className="sign-in-button">

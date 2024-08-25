@@ -1,30 +1,27 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/img/argentBankLogo.png";
 
-import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { useAuthSelector } from "../redux/hooks";
-import { signOut } from "../redux/thunks";
-import { promiseError } from "../utils/consts";
+import { useLogoutMutation } from "../redux/services/bankApi";
 
 function Header() {
-  const { isAuth, firstName } = useAuthSelector();
-  const dispatch = useDispatch();
+  const { isAuth, user } = useAuthSelector();
+  const [logout] = useLogoutMutation();
+
   const navigate = useNavigate();
 
-  const logout = async (e) => {
+  const handleLogout = async (e) => {
     e.preventDefault();
-
-    try {
-      await toast.promise(dispatch(signOut()).unwrap(), {
+    toast
+      .promise(logout().unwrap(), {
         pending: "Disconnecting...",
         success: "You are logged out",
-        error: promiseError,
-      });
-      navigate("/");
-    } catch (error) {
-      // No report error
-    }
+        error: {
+          render: ({ data: error }) => error.message,
+        },
+      })
+      .then(() => navigate("/"));
   };
 
   return (
@@ -42,9 +39,13 @@ function Header() {
           <>
             <NavLink className="main-nav-item" to="/user">
               <i className="fa fa-user-circle"></i>
-              {firstName || "Compte"}
+              {user?.firstName || "Compte"}
             </NavLink>
-            <Link className="main-nav-item" to="/sign-out" onClick={logout}>
+            <Link
+              className="main-nav-item"
+              to="/sign-out"
+              onClick={handleLogout}
+            >
               <i className="fa fa-sign-out"></i>
               Sign Out
             </Link>
