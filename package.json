@@ -4,7 +4,8 @@
   "description": "Projet 13 de la formation \"Développeur JavaScript / React\" de OpenClassRoom",
   "scripts": {
     "back": "cd back && npm run dev:server",
-    "front": "cd front && npm run dev"
+    "front": "cd front && npm run dev",
+    "deploy": "cd front && npm run deploy"
   },
   "author": {
     "name": "Pierre HENRY",
