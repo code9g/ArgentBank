@@ -1,19 +1,15 @@
 import PropTypes from "prop-types";
-import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
-import { useProfileSelector } from "../../redux/hooks";
-import { profileClearError } from "../../redux/slices/profileSlice";
-import { updateProfile } from "../../redux/thunks";
-import { promiseError } from "../../utils/consts";
+import { useAuthSelector } from "../../redux/hooks";
+import { useUpdateProfileMutation } from "../../redux/services/bankApi";
+import Smoke from "../Smoke";
 
 function ProfileEdit({ close }) {
   const {
-    isError,
-    error,
     user: { firstName, lastName },
-  } = useProfileSelector();
+  } = useAuthSelector();
 
-  const dispatch = useDispatch();
+  const [updateProfile, { isPending, isError, error }] =
+    useUpdateProfileMutation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,29 +17,19 @@ function ProfileEdit({ close }) {
       firstName: e.target["firstName"].value,
       lastName: e.target["lastName"].value,
     };
-    try {
-      await toast.promise(dispatch(updateProfile(profile)).unwrap(), {
-        pending: "Updating...",
-        success: "Your profile has been successfully updated",
-        error: promiseError,
-      });
+    const { data } = await updateProfile(profile);
+    if (data) {
       close();
-    } catch (error) {
-      // No report error
     }
   };
 
-  const handleChange = () => {
-    dispatch(profileClearError());
-  };
-
   const handleCancel = () => {
-    dispatch(profileClearError());
     close();
   };
 
   return (
     <form name="profile-edit" className="form-profile" onSubmit={handleSubmit}>
+      {isPending && <Smoke />}
       <div className="form-profile-grid">
         <input
           id="firstName"
@@ -51,7 +37,6 @@ function ProfileEdit({ close }) {
           type="text"
           placeholder={firstName}
           defaultValue={firstName}
-          onChange={handleChange}
           minLength={2}
           required
         />
@@ -61,7 +46,6 @@ function ProfileEdit({ close }) {
           type="text"
           placeholder={lastName}
           defaultValue={lastName}
-          onChange={handleChange}
           minLength={2}
           required
         />

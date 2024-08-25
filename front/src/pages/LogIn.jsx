@@ -1,4 +1,3 @@
-import { Navigate } from "react-router-dom";
 import SignIn from "../components/forms/SignIn";
 import Title from "../components/Title";
 import { useAuthSelector } from "../redux/hooks";
@@ -7,7 +6,7 @@ function LogIn() {
   const { isAuth } = useAuthSelector();
 
   if (isAuth) {
-    return <Navigate to="/" />;
+    // return <Navigate to="/" />;
   }
 
   return (

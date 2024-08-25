@@ -3,95 +3,6 @@ import iconMoney from "../assets/img/icon-money.png";
 import iconSecurity from "../assets/img/icon-security.png";
 
 /**
- * Permet d'activer ou non la simulation d'une lenteur de connexion/réponse,
- *
- * Note: ne fonctionne uniquement que si l'application est en développement
- *
- * @type {{ active: boolean; delay: number; random: number; }}
- */
-export const FAKE_NETWORK = { active: false, delay: 500, random: 800 };
-
-/**
- * Intervalle de rafraichissement des données utilisateur de la page /user,
- * exprimé en ms.
- *
- * @type {number}
- */
-export const INTERVAL_USER_DATA_REFRESH = 5 * 60 * 1000;
-
-/**
- * Durée de vie d'une authentification par défaut exprimé en ms.
- * (Non implémenté pour le moment)
- *
- * @type {number}
- */
-export const TIMEOUT_AUTHENTIFICATION = 30 * 60 * 1000;
-
-/**
- * Indicateur d'état d'envoie/chargement des données
- * Cet état indique qu'il est inactif
- *
- * @type {"idle"}
- */
-export const IDLE_STATUS = "idle";
-
-/**
- * Indicateur d'état d'envoie/chargement des données
- * Cet état indique qu'il a réalisé la tâche avec succès
- *
- * @type {"success"}
- */
-export const SUCCESS_STATUS = "success";
-
-/**
- * Indicateur d'état d'envoie/chargement des données
- * Cet état indique qu'il y'a eu une erreur
- *
- * @type {"error"}
- */
-export const ERROR_STATUS = "error";
-
-/**
- * Indicateur d'état d'envoie/chargement des données
- * Cet état indique qu'il est en train de réaliser la tâche.
- *
- * @type {"pending"}
- */
-export const PENDING_STATUS = "pending";
-
-/**
- * Indicateur de l'action à l'ogirine de la tâche qui indique
- * un chargement des données
- *
- * @type {"get"}
- */
-export const GET_ACTION = "get";
-
-/**
- * Indicateur de l'action à l'ogirine de la tâche qui indique
- * une modification des données
- *
- * @type {"put"}
- */
-export const PUT_ACTION = "put";
-
-/**
- * Indicateur de l'action à l'ogirine de la tâche qui indique
- * une authentification de l'utilisateur
- *
- * @type {"signin"}
- */
-export const SIGNIN_ACTION = "signin";
-
-/**
- * Indicateur de l'action à l'ogirine de la tâche qui indique
- * une déconnexion de l'utilisateur
- *
- * @type {"signout"}
- */
-export const SIGNOUT_ACTION = "signout";
-
-/**
  * URL pour les requêtes à l'API de l'application
  *
  * @type {"http://localhost:3001/api/v1"}
@@ -111,18 +22,6 @@ export const LOGIN_ENDPOINT = "/user/login";
  * @type {"/user/profile"}
  */
 export const PROFILE_ENDPOINT = "/user/profile";
-
-/**
- * Render pour toast.promise
- *
- * @example
- * toast.promise(promise, {pending: ..., success: ..., error: promiseError})
- *
- * @type {{ render: ({ data }: { data: any; }) => any; }}
- */
-export const promiseError = {
-  render: ({ data }) => data.statusText || data.message,
-};
 
 /**
  * Constante/Objet d'affichage de la monnaie, ici, au format américain et en $

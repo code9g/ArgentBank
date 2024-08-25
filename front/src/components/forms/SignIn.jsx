@@ -1,43 +1,32 @@
 import PropTypes from "prop-types";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { useAuthSelector } from "../../redux/hooks";
-import { authClearError } from "../../redux/slices/authSlice";
-import { signIn } from "../../redux/thunks";
-import { promiseError } from "../../utils/consts";
+import {
+  useGetProfileMutation,
+  useLoginMutation,
+} from "../../redux/services/bankApi";
+
 import Smoke from "../Smoke";
 
 function SignIn({ to }) {
-  const { isPending, isError, error } = useAuthSelector();
-
-  const dispatch = useDispatch();
+  const [login, { isPending, isError, error }] = useLoginMutation();
+  const [getProfile] = useGetProfileMutation();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    const target = e.currentTarget;
     const credentials = {
-      email: e.target["username"].value,
-      password: e.target["password"].value,
+      email: target["username"].value,
+      password: target["password"].value,
     };
-    const remember = e.target["remember"].checked;
+    const remember = target["remember"].checked;
 
-    try {
-      await toast.promise(dispatch(signIn(credentials, remember)).unwrap(), {
-        pending: "Connecting...",
-        success: "Your are connected successfully !",
-        error: promiseError,
-      });
-      navigate(to);
-    } catch (error) {
-      // No report error
-    }
-  };
-
-  const handleChange = () => {
-    if (isError) {
-      dispatch(authClearError());
+    const { data } = await login(credentials, remember);
+    if (data) {
+      const { data } = await getProfile();
+      if (data) {
+        navigate(to);
+      }
     }
   };
 
@@ -51,26 +40,14 @@ function SignIn({ to }) {
       </div>
       <div className="input-text">
         <label htmlFor="username">Username</label>
-        <input
-          type="text"
-          id="username"
-          onChange={handleChange}
-          minLength={2}
-          required
-        />
+        <input type="text" id="username" minLength={2} required />
       </div>
       <div className="input-password">
         <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          onChange={handleChange}
-          minLength={2}
-          required
-        />
+        <input type="password" id="password" minLength={2} required />
       </div>
       <div className="input-checkbox">
-        <input type="checkbox" id="remember" onChange={handleChange} />
+        <input type="checkbox" id="remember" />
         <label htmlFor="remember">Remember me</label>
       </div>
       <button type="submit" className="sign-in-button">

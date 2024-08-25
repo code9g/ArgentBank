@@ -1,52 +1,13 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
 import Account from "../components/Account";
-import Smoke from "../components/Smoke";
 import Title from "../components/Title";
 import UserHeader from "../components/UserHeader";
-import { useProfileSelector } from "../redux/hooks";
-import { getProfile } from "../redux/thunks";
-import {
-  accounts,
-  INTERVAL_USER_DATA_REFRESH,
-  promiseError,
-} from "../utils/consts";
+import { accounts } from "../utils/consts";
 
 function User() {
-  const { isPending, timeLeft } = useProfileSelector();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (!isPending) {
-      let handle = null;
-
-      const toastify = (text) => {
-        toast.promise(dispatch(getProfile()).unwrap(), {
-          pending: text,
-          success: "Your data has been retrieved",
-          error: promiseError,
-        });
-      };
-
-      const timeoutTrigger = () => {
-        toastify("Refreshing your profile data...");
-        handle = setTimeout(timeoutTrigger, INTERVAL_USER_DATA_REFRESH);
-      };
-      if (timeLeft > 0) {
-        handle = setTimeout(timeoutTrigger, timeLeft);
-      } else {
-        handle = null;
-        timeoutTrigger();
-      }
-      return () => clearTimeout(handle);
-    }
-  }, [timeLeft, dispatch, isPending]);
-
   return (
     <>
       <Title>User</Title>
-      {isPending && <Smoke />}
+      {/* {isPending && <Smoke />} */}
       <main className="main bg-dark">
         <UserHeader />
         <h2 className="sr-only">Accounts</h2>

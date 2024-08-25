@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
+import bankApi from "./services/bankApi";
 import authReducer from "./slices/authSlice";
-import profileReducer from "./slices/profileSlice";
 
 /**
  * Constante du "store" de l'application
@@ -9,9 +9,11 @@ import profileReducer from "./slices/profileSlice";
  */
 const store = configureStore({
   reducer: {
+    [bankApi.reducerPath]: bankApi.reducer,
     auth: authReducer,
-    profile: profileReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(bankApi.middleware),
   devTools: import.meta.env.DEV,
 });
 

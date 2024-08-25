@@ -1,14 +1,13 @@
 import { useState } from "react";
-import { useProfileSelector } from "../redux/hooks";
+import { useAuthSelector } from "../redux/hooks";
 import ProfileEdit from "./forms/ProfileEdit";
 
 function UserHeader() {
   const [isEditing, setIsEditing] = useState(false);
 
   const {
-    isPending,
     user: { firstName, lastName },
-  } = useProfileSelector();
+  } = useAuthSelector();
 
   const open = () => setIsEditing(true);
   const close = () => setIsEditing(false);
@@ -21,13 +20,7 @@ function UserHeader() {
           {isEditing || (
             <>
               <br />
-              {firstName || lastName ? (
-                firstName + " " + lastName
-              ) : isPending ? (
-                <i className="waiting">Waiting data...</i>
-              ) : (
-                "Missing data"
-              )}
+              {`${firstName} ${lastName}`}
             </>
           )}
         </h1>

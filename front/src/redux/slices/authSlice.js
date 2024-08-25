@@ -1,13 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-  ERROR_STATUS,
-  IDLE_STATUS,
-  PENDING_STATUS,
-  SIGNIN_ACTION,
-  SIGNOUT_ACTION,
-  SUCCESS_STATUS,
-} from "../../utils/consts";
-import { signInThunk, signOutThunk } from "../thunks";
+import { toast } from "react-toastify";
+import bankApi from "../services/bankApi";
 
 /**
  * Données initiales de l'état de connexion (loginSlice)
@@ -15,24 +8,17 @@ import { signInThunk, signOutThunk } from "../thunks";
  * @type {{ status: string | null; error: string | null; remember: boolean; token: string | null; firstName: string | null; }}
  */
 const initialState = {
-  action: null,
-  status: IDLE_STATUS,
-  error: null,
-
   remember: false,
   token: null,
-  firstName: null,
+  user: {},
 };
 
 // Chargement des données depuis localstorage si elles existent
 // (situation où l'utilisateur a opté pour "Remember me")
 const token = localStorage.getItem("token");
 if (token) {
-  initialState.action = SIGNIN_ACTION;
-  initialState.status = SUCCESS_STATUS;
   initialState.remember = true;
   initialState.token = token;
-  initialState.firstName = localStorage.getItem("firstName");
 }
 
 /**
@@ -44,59 +30,76 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    authClearError: (state) => {
-      state.status = IDLE_STATUS;
-      state.error = null;
-    },
-
-    authUpdateFirstName: (state, { payload: firstName }) => {
-      state.firstName = firstName;
-      if (state.remember) {
-        localStorage.setItem("firstName", firstName);
-      }
+    logout: (state) => {
+      state.token = null;
+      state.remember = false;
+      state.user = {};
+      toast.success("You are logged out");
     },
   },
   extraReducers: (builder) =>
     builder
-      .addCase(signInThunk.pending, (state) => {
-        state.action = SIGNIN_ACTION;
-        state.status = PENDING_STATUS;
+      .addMatcher(bankApi.endpoints.login.matchPending, (state) => {
+        state.toastId = toast.loading("Connexion");
       })
-      .addCase(signInThunk.fulfilled, (state, { payload }) => {
-        state.status = SUCCESS_STATUS;
-        if (payload) {
-          const { token, remember } = payload;
+      .addMatcher(
+        bankApi.endpoints.login.matchFulfilled,
+        (state, { payload: token }) => {
           state.token = token;
-          state.remember = remember;
-          if (remember) {
+          if (state.remember) {
             localStorage.setItem("token", token);
           }
-        } else {
-          localStorage.clear();
-          state.token = null;
-          state.remember = null;
+          toast.update(state.toastId, {
+            render: "You are successfully logged !",
+            isLoading: false,
+            type: "success",
+            autoClose: 1500,
+          });
         }
-        state.error = null;
+      )
+      .addMatcher(
+        bankApi.endpoints.login.matchRejected,
+        (state, { payload: message }) => {
+          toast.update(state.toastId, {
+            render: message,
+            isLoading: false,
+            type: "error",
+            autoClose: 1500,
+          });
+        }
+      )
+      .addMatcher(
+        bankApi.endpoints.getProfile.matchFulfilled,
+        (state, { payload: user }) => {
+          state.user = user;
+        }
+      )
+      .addMatcher(bankApi.endpoints.updateProfile.matchPending, (state) => {
+        state.toastId = toast.loading("Updating...");
       })
-      .addCase(signInThunk.rejected, (state, { error: { message } }) => {
-        state.status = ERROR_STATUS;
-        state.error = message;
-      })
-      .addCase(signOutThunk.pending, (state) => {
-        state.action = SIGNOUT_ACTION;
-        state.status = PENDING_STATUS;
-      })
-      .addCase(signOutThunk.fulfilled, (state) => {
-        state.status = SUCCESS_STATUS;
-        localStorage.clear();
-        state.token = null;
-        state.remember = null;
-        state.error = null;
-      })
-      .addCase(signOutThunk.rejected, (state, { error: { message } }) => {
-        state.status = ERROR_STATUS;
-        state.error = message;
-      }),
+      .addMatcher(
+        bankApi.endpoints.updateProfile.matchFulfilled,
+        (state, { payload: user }) => {
+          state.user = user;
+          toast.update(state.toastId, {
+            render: "Profile successfully updated !",
+            isLoading: false,
+            type: "success",
+            autoClose: 1500,
+          });
+        }
+      )
+      .addMatcher(
+        bankApi.endpoints.updateProfile.matchRejected,
+        (state, { payload: message }) => {
+          toast.update(state.toastId, {
+            render: message,
+            isLoading: false,
+            type: "error",
+            autoClose: 1500,
+          });
+        }
+      ),
 });
 
 /**
@@ -104,6 +107,6 @@ export const authSlice = createSlice({
  *
  * @type {ActionCreator}
  */
-export const { authClearError, authUpdateFirstName } = authSlice.actions;
+export const { logout } = authSlice.actions;
 
 export default authSlice.reducer;
