@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { toast } from "react-toastify";
 import bankApi from "../services/bankApi";
 
 /**
@@ -19,7 +18,6 @@ const token = localStorage.getItem("token");
 if (token) {
   initialState.remember = true;
   initialState.token = token;
-  initialState.user = JSON.parse(localStorage.getItem("user"));
 }
 
 /**
@@ -31,18 +29,10 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    logout: (state) => {
-      localStorage.clear();
-      state.token = null;
-      state.remember = false;
-      state.user = null;
-      toast.success("You are logged out");
-    },
     setRemember: (state, { payload: remember }) => {
       state.remember = remember;
       if (remember) {
         localStorage.setItem("token", state.token);
-        localStorage.setItem("user", JSON.stringify(state.user));
       } else {
         localStorage.clear();
       }
@@ -50,6 +40,7 @@ export const authSlice = createSlice({
   },
   extraReducers: (builder) =>
     builder
+
       .addMatcher(
         bankApi.endpoints.login.matchFulfilled,
         (state, { payload: token }) => {
@@ -63,9 +54,6 @@ export const authSlice = createSlice({
         bankApi.endpoints.getProfile.matchFulfilled,
         (state, { payload: user }) => {
           state.user = user;
-          if (state.remember) {
-            localStorage.setItem("user", JSON.stringify(user));
-          }
         }
       )
       .addMatcher(
@@ -73,7 +61,13 @@ export const authSlice = createSlice({
         (state, { payload: user }) => {
           state.user = user;
         }
-      ),
+      )
+      .addMatcher(bankApi.endpoints.logout.matchFulfilled, (state) => {
+        localStorage.clear();
+        state.token = null;
+        state.remember = false;
+        state.user = null;
+      }),
 });
 
 /**
@@ -81,6 +75,6 @@ export const authSlice = createSlice({
  *
  * @type {ActionCreator}
  */
-export const { logout, setRemember } = authSlice.actions;
+export const { setRemember } = authSlice.actions;
 
 export default authSlice.reducer;

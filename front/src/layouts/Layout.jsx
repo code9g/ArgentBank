@@ -15,8 +15,8 @@ function Layout() {
   useEffect(() => {
     if (refresh) {
       toast.promise(getProfile().unwrap(), {
-        pending: "Loading...",
-        success: "You are successfully retrieved data profile...",
+        pending: "Loading data profile...",
+        success: "You are successfully loaded data profile",
         error: {
           render: ({ data: error }) => error.message,
         },

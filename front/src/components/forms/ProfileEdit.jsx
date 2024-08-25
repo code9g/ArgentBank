@@ -17,13 +17,19 @@ function ProfileEdit({ close }) {
       firstName: target["firstName"].value,
       lastName: target["lastName"].value,
     };
-    toast
-      .promise(updateProfile(profile).unwrap(), {
+
+    toast.promise(
+      updateProfile(profile)
+        .unwrap()
+        .then(() => close()),
+      {
         pending: "Updating...",
         success: "Profile successfully updated !",
-        error: { render: (error) => error.message },
-      })
-      .then(() => close());
+        error: {
+          render: ({ data: error }) => error.message,
+        },
+      }
+    );
   };
 
   return (

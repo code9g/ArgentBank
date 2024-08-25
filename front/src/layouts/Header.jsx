@@ -1,21 +1,27 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/img/argentBankLogo.png";
 
-import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 import { useAuthSelector } from "../redux/hooks";
-import { logout } from "../redux/slices/authSlice";
+import { useLogoutMutation } from "../redux/services/bankApi";
 
 function Header() {
   const { isAuth, user } = useAuthSelector();
-  const firstName = user?.firstName ?? null;
+  const [logout] = useLogoutMutation();
 
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogout = async (e) => {
     e.preventDefault();
-    dispatch(logout());
-    navigate("/");
+    toast
+      .promise(logout().unwrap(), {
+        pending: "Disconnecting...",
+        success: "You are logged out",
+        error: {
+          render: ({ data: error }) => error.message,
+        },
+      })
+      .then(() => navigate("/"));
   };
 
   return (
@@ -33,7 +39,7 @@ function Header() {
           <>
             <NavLink className="main-nav-item" to="/user">
               <i className="fa fa-user-circle"></i>
-              {firstName || "Compte"}
+              {user?.firstName || "Compte"}
             </NavLink>
             <Link
               className="main-nav-item"

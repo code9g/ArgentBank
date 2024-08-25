@@ -38,7 +38,7 @@ export const bankApi = createApi({
       }
     },
   }),
-  tagTypes: ["Profile"],
+  tagTypes: ["Auth", "Profile"],
   endpoints: (builder) => ({
     login: builder.mutation({
       query: ({ email, password }) => ({
@@ -48,6 +48,12 @@ export const bankApi = createApi({
       }),
       transformResponse: (response) => response.body.token,
       transformErrorResponse: customTransformResponse(LOGIN_ENDPOINT, "POST"),
+      providesTags: ["Auth"],
+    }),
+    logout: builder.mutation({
+      queryFn: async () => {
+        return { status: 200, message: "User successfully disconnected" };
+      },
     }),
     getProfile: builder.mutation({
       query: (token = null) => ({
@@ -80,6 +86,7 @@ export const bankApi = createApi({
 
 export const {
   useLoginMutation,
+  useLogoutMutation,
   useGetProfileMutation,
   useUpdateProfileMutation,
 } = bankApi;
