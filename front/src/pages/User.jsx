@@ -10,21 +10,26 @@ import { getProfile } from "../redux/thunks";
 import { accounts, promiseError } from "../utils/consts";
 
 function User() {
-  const { isPending } = useProfileSelector();
+  const {
+    isPending,
+    user: { id },
+  } = useProfileSelector();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const handle = setTimeout(
-      () =>
-        toast.promise(dispatch(getProfile()).unwrap(), {
-          pending: "Refreshing your profile data...",
-          success: "Your data has been retrieved",
-          error: promiseError,
-        }),
-      0
-    );
-    return () => clearTimeout(handle);
-  }, [dispatch]);
+    if (id === null) {
+      const handle = setTimeout(
+        () =>
+          toast.promise(dispatch(getProfile()).unwrap(), {
+            pending: "Refreshing your profile data...",
+            success: "Your data has been retrieved",
+            error: promiseError,
+          }),
+        0
+      );
+      return () => clearTimeout(handle);
+    }
+  }, [id, dispatch]);
 
   return (
     <>
