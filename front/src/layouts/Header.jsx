@@ -6,10 +6,9 @@ import { useAuthSelector } from "../redux/hooks";
 import { logout } from "../redux/slices/authSlice";
 
 function Header() {
-  const {
-    isAuth,
-    user: { firstName },
-  } = useAuthSelector();
+  const { isAuth, user } = useAuthSelector();
+  const firstName = user?.firstName ?? null;
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

@@ -1,30 +1,29 @@
 import PropTypes from "prop-types";
+import { toast } from "react-toastify";
 import { useAuthSelector } from "../../redux/hooks";
 import { useUpdateProfileMutation } from "../../redux/services/bankApi";
 import Smoke from "../Smoke";
 
 function ProfileEdit({ close }) {
-  const {
-    user: { firstName, lastName },
-  } = useAuthSelector();
+  const { user } = useAuthSelector();
 
   const [updateProfile, { isPending, isError, error }] =
     useUpdateProfileMutation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const target = e.currentTarget;
     const profile = {
-      firstName: e.target["firstName"].value,
-      lastName: e.target["lastName"].value,
+      firstName: target["firstName"].value,
+      lastName: target["lastName"].value,
     };
-    const { data } = await updateProfile(profile);
-    if (data) {
-      close();
-    }
-  };
-
-  const handleCancel = () => {
-    close();
+    toast
+      .promise(updateProfile(profile).unwrap(), {
+        pending: "Updating...",
+        success: "Profile successfully updated !",
+        error: { render: (error) => error.message },
+      })
+      .then(() => close());
   };
 
   return (
@@ -35,8 +34,8 @@ function ProfileEdit({ close }) {
           id="firstName"
           className="input-firstname"
           type="text"
-          placeholder={firstName}
-          defaultValue={firstName}
+          placeholder={user?.firstName}
+          defaultValue={user?.firstName}
           minLength={2}
           required
         />
@@ -44,15 +43,15 @@ function ProfileEdit({ close }) {
           id="lastName"
           className="input-lastname"
           type="text"
-          placeholder={lastName}
-          defaultValue={lastName}
+          placeholder={user?.lastName}
+          defaultValue={user?.lastName}
           minLength={2}
           required
         />
         <button className="save-button" type="submit">
           Save
         </button>
-        <button className="cancel-button" type="button" onClick={handleCancel}>
+        <button className="cancel-button" type="button" onClick={close}>
           Cancel
         </button>
       </div>

@@ -10,7 +10,7 @@ import bankApi from "../services/bankApi";
 const initialState = {
   remember: false,
   token: null,
-  user: {},
+  user: null,
 };
 
 // Chargement des données depuis localstorage si elles existent
@@ -19,6 +19,7 @@ const token = localStorage.getItem("token");
 if (token) {
   initialState.remember = true;
   initialState.token = token;
+  initialState.user = JSON.parse(localStorage.getItem("user"));
 }
 
 /**
@@ -31,17 +32,24 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
+      localStorage.clear();
       state.token = null;
       state.remember = false;
-      state.user = {};
+      state.user = null;
       toast.success("You are logged out");
+    },
+    setRemember: (state, { payload: remember }) => {
+      state.remember = remember;
+      if (remember) {
+        localStorage.setItem("token", state.token);
+        localStorage.setItem("user", JSON.stringify(state.user));
+      } else {
+        localStorage.clear();
+      }
     },
   },
   extraReducers: (builder) =>
     builder
-      .addMatcher(bankApi.endpoints.login.matchPending, (state) => {
-        state.toastId = toast.loading("Connexion");
-      })
       .addMatcher(
         bankApi.endpoints.login.matchFulfilled,
         (state, { payload: token }) => {
@@ -49,55 +57,21 @@ export const authSlice = createSlice({
           if (state.remember) {
             localStorage.setItem("token", token);
           }
-          toast.update(state.toastId, {
-            render: "You are successfully logged !",
-            isLoading: false,
-            type: "success",
-            autoClose: 1500,
-          });
-        }
-      )
-      .addMatcher(
-        bankApi.endpoints.login.matchRejected,
-        (state, { payload: message }) => {
-          toast.update(state.toastId, {
-            render: message,
-            isLoading: false,
-            type: "error",
-            autoClose: 1500,
-          });
         }
       )
       .addMatcher(
         bankApi.endpoints.getProfile.matchFulfilled,
         (state, { payload: user }) => {
           state.user = user;
+          if (state.remember) {
+            localStorage.setItem("user", JSON.stringify(user));
+          }
         }
       )
-      .addMatcher(bankApi.endpoints.updateProfile.matchPending, (state) => {
-        state.toastId = toast.loading("Updating...");
-      })
       .addMatcher(
         bankApi.endpoints.updateProfile.matchFulfilled,
         (state, { payload: user }) => {
           state.user = user;
-          toast.update(state.toastId, {
-            render: "Profile successfully updated !",
-            isLoading: false,
-            type: "success",
-            autoClose: 1500,
-          });
-        }
-      )
-      .addMatcher(
-        bankApi.endpoints.updateProfile.matchRejected,
-        (state, { payload: message }) => {
-          toast.update(state.toastId, {
-            render: message,
-            isLoading: false,
-            type: "error",
-            autoClose: 1500,
-          });
         }
       ),
 });
@@ -107,6 +81,6 @@ export const authSlice = createSlice({
  *
  * @type {ActionCreator}
  */
-export const { logout } = authSlice.actions;
+export const { logout, setRemember } = authSlice.actions;
 
 export default authSlice.reducer;
