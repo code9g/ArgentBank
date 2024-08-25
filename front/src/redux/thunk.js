@@ -21,15 +21,12 @@ const fake = async () =>
     : null;
 
 /**
- * Authentification d'un utilisateur
+ * Réalise l'authentification d'un utilisateur et synchronise les informations
+ * avec le store
  *
- * @async
- * @param {Object} credentials
- * @param {string} credentials.email
- * @param {string} credentials.password
- * @param {boolean} remember
+ * @example
  *
- * @type {AsyncThunk}
+ * dispatch(singInThunk({{email, password}, remember})
  */
 export const signInThunk = createAsyncThunk(
   "auth/" + SIGNIN_ACTION,
@@ -50,6 +47,14 @@ export const signInThunk = createAsyncThunk(
     )
 );
 
+/**
+ * Réalise la déconnexion de l'utilisateur et synchronise les informations
+ * avec le store
+ *
+ * @example
+ *
+ * dispatch(singOut())
+ */
 export const signOutThunk = createAsyncThunk(
   "auth/" + SIGNOUT_ACTION,
   async (_, thunkApi) =>
@@ -61,6 +66,20 @@ export const signOutThunk = createAsyncThunk(
     )
 );
 
+/**
+ * Permet de récupérer le profil de l'utilisateur et synchronise les informations
+ * avec le store
+ *
+ * @example
+ *
+ * dispatch(getProfileThunk())
+ *
+ * ou
+ *
+ * dispatch(getProfileThunk(token))
+ *
+ * Note: le token est utilisé uniquement en interne
+ */
 export const getProfileThunk = createAsyncThunk(
   "profile/" + GET_ACTION,
   async (token = null, thunkApi) =>
@@ -79,6 +98,14 @@ export const getProfileThunk = createAsyncThunk(
     )
 );
 
+/**
+ * Permet de mettre à jour le profil de l'utilisateur et
+ * synchronise les informations avec le store
+ *
+ * @example
+ *
+ * dispatch(updateProfileThunk({firstName, lastName})
+ */
 export const updateProfileThunk = createAsyncThunk(
   "profile/" + PUT_ACTION,
   async (profile, thunkApi) =>
