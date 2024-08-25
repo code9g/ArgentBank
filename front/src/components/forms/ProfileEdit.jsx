@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { useProfileSelector } from "../../redux/hooks";
 import { profileClearError } from "../../redux/slices/profileSlice";
-import { updateProfileThunk } from "../../redux/thunk";
+import { updateProfile } from "../../redux/thunks";
 import { promiseError } from "../../utils/consts";
 
 function ProfileEdit({ close }) {
@@ -17,20 +17,16 @@ function ProfileEdit({ close }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const profile = {
+      firstName: e.target["firstName"].value,
+      lastName: e.target["lastName"].value,
+    };
     try {
-      await toast.promise(
-        dispatch(
-          updateProfileThunk({
-            firstName: e.target["firstName"].value,
-            lastName: e.target["lastName"].value,
-          })
-        ).unwrap(),
-        {
-          pending: "Updating...",
-          success: "Your profile has been successfully updated",
-          error: promiseError,
-        }
-      );
+      await toast.promise(dispatch(updateProfile(profile)).unwrap(), {
+        pending: "Updating...",
+        success: "Your profile has been successfully updated",
+        error: promiseError,
+      });
       close();
     } catch (error) {
       // No report error

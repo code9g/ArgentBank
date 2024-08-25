@@ -7,7 +7,7 @@ import {
   SIGNOUT_ACTION,
   SUCCESS_STATUS,
 } from "../../utils/consts";
-import { signInThunk, signOutThunk } from "../thunk";
+import { signInThunk, signOutThunk } from "../thunks";
 
 /**
  * Données initiales de l'état de connexion (loginSlice)

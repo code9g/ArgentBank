@@ -6,7 +6,7 @@ import Smoke from "../components/Smoke";
 import Title from "../components/Title";
 import UserHeader from "../components/UserHeader";
 import { useProfileSelector } from "../redux/hooks";
-import { getProfileThunk } from "../redux/thunk";
+import { getProfile } from "../redux/thunks";
 import {
   accounts,
   INTERVAL_USER_DATA_REFRESH,
@@ -22,7 +22,7 @@ function User() {
       let handle = null;
 
       const toastify = (text) => {
-        toast.promise(dispatch(getProfileThunk()).unwrap(), {
+        toast.promise(dispatch(getProfile()).unwrap(), {
           pending: text,
           success: "Your data has been retrieved",
           error: promiseError,

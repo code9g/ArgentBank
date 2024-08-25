@@ -8,7 +8,7 @@ import {
   PUT_ACTION,
   SUCCESS_STATUS,
 } from "../../utils/consts";
-import { getProfileThunk, updateProfileThunk } from "../thunk";
+import { getProfileThunk, updateProfileThunk } from "../thunks";
 
 /**
  * Données initiales de l'état de connexion (profileSlice)

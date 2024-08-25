@@ -20,14 +20,6 @@ const fake = async () =>
     ? fakeNetwork(FAKE_NETWORK.delay, FAKE_NETWORK.random)
     : null;
 
-/**
- * Réalise l'authentification d'un utilisateur et synchronise les informations
- * avec le store
- *
- * @example
- *
- * dispatch(singInThunk({{email, password}, remember})
- */
 export const signInThunk = createAsyncThunk(
   "auth/" + SIGNIN_ACTION,
   async ({ credentials, remember }, thunkApi) =>
@@ -47,14 +39,6 @@ export const signInThunk = createAsyncThunk(
     )
 );
 
-/**
- * Réalise la déconnexion de l'utilisateur et synchronise les informations
- * avec le store
- *
- * @example
- *
- * dispatch(singOut())
- */
 export const signOutThunk = createAsyncThunk(
   "auth/" + SIGNOUT_ACTION,
   async (_, thunkApi) =>
@@ -66,20 +50,6 @@ export const signOutThunk = createAsyncThunk(
     )
 );
 
-/**
- * Permet de récupérer le profil de l'utilisateur et synchronise les informations
- * avec le store
- *
- * @example
- *
- * dispatch(getProfileThunk())
- *
- * ou
- *
- * dispatch(getProfileThunk(token))
- *
- * Note: le token est utilisé uniquement en interne
- */
 export const getProfileThunk = createAsyncThunk(
   "profile/" + GET_ACTION,
   async (token = null, thunkApi) =>
@@ -98,14 +68,6 @@ export const getProfileThunk = createAsyncThunk(
     )
 );
 
-/**
- * Permet de mettre à jour le profil de l'utilisateur et
- * synchronise les informations avec le store
- *
- * @example
- *
- * dispatch(updateProfileThunk({firstName, lastName})
- */
 export const updateProfileThunk = createAsyncThunk(
   "profile/" + PUT_ACTION,
   async (profile, thunkApi) =>
@@ -120,3 +82,45 @@ export const updateProfileThunk = createAsyncThunk(
       )
     )
 );
+
+/**
+ * Réalise l'authentification d'un utilisateur et synchronise les informations
+ * avec le store
+ *
+ * @param {Object} credentials
+ * @param {string} credentials.email
+ * @param {string} credentials.password
+ * @param {boolean} remember
+ * @returns {AsyncThunk}
+ */
+export const signIn = (credentials, remember) =>
+  signInThunk({ credentials, remember });
+
+/**
+ * Réalise la déconnexion de l'utilisateur et synchronise les informations
+ * avec le store
+ *
+ * @returns {AsyncThunk}
+ */
+export const signOut = () => signOutThunk();
+
+/**
+ * Permet de récupérer le profil de l'utilisateur et synchronise les informations
+ * avec le store
+ *
+ * @returns {AsyncThunk}
+ */
+export const getProfile = () => getProfileThunk();
+
+/**
+ * Permet de mettre à jour le profil de l'utilisateur et
+ * synchronise les informations avec le store
+ *
+ * Note: seul firstName et lastName sont modifiables
+ *
+ * @param {Object} profile
+ * @param {string} profile.firstName
+ * @param {string} profile.lastName
+ * @returns {AsyncThunk}
+ */
+export const updateProfile = (profile) => updateProfileThunk(profile);

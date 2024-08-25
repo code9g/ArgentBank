@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuthSelector } from "../../redux/hooks";
 import { authClearError } from "../../redux/slices/authSlice";
-import { signInThunk } from "../../redux/thunk";
+import { signIn } from "../../redux/thunks";
 import { promiseError } from "../../utils/consts";
 import Smoke from "../Smoke";
 
@@ -24,14 +24,11 @@ function SignIn({ to }) {
     const remember = e.target["remember"].checked;
 
     try {
-      await toast.promise(
-        dispatch(signInThunk({ credentials, remember })).unwrap(),
-        {
-          pending: "Connecting...",
-          success: "Your are connected successfully !",
-          error: promiseError,
-        }
-      );
+      await toast.promise(dispatch(signIn(credentials, remember)).unwrap(), {
+        pending: "Connecting...",
+        success: "Your are connected successfully !",
+        error: promiseError,
+      });
       navigate(to);
     } catch (error) {
       // No report error
