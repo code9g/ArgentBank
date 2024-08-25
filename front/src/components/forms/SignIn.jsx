@@ -26,7 +26,7 @@ function SignIn({ to }) {
         .unwrap()
         .then(() => navigate(to)),
       {
-        pending: "Connexion...",
+        pending: "Connecting...",
         success: "You are successfully logged...",
         error: {
           render: ({ data: error }) => error.message,

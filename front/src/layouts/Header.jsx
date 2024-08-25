@@ -13,15 +13,19 @@ function Header() {
 
   const handleLogout = async (e) => {
     e.preventDefault();
-    toast
-      .promise(logout().unwrap(), {
+
+    toast.promise(
+      logout()
+        .unwrap()
+        .then(() => navigate("/")),
+      {
         pending: "Disconnecting...",
         success: "You are logged out",
         error: {
           render: ({ data: error }) => error.message,
         },
-      })
-      .then(() => navigate("/"));
+      }
+    );
   };
 
   return (
