@@ -23,63 +23,52 @@ const fake = async () =>
 export const signInThunk = createAsyncThunk(
   "auth/" + SIGNIN_ACTION,
   async ({ credentials, remember }, thunkApi) =>
-    new Promise((resolve, reject) =>
-      fake().then(() =>
-        fetchLogin(credentials)
-          .then(async (token) => {
-            thunkApi
-              .dispatch(getProfileThunk(token))
-              .unwrap()
-              .then((action) =>
-                resolve({ token, remember, user: action.payload })
-              );
-          })
-          .catch((error) => reject(error.statusText || error.message))
-      )
+    fake().then(() =>
+      fetchLogin(credentials)
+        .then(async (token) => {
+          return thunkApi
+            .dispatch(getProfileThunk(token))
+            .unwrap()
+            .then((action) => ({ token, remember, user: action.payload }));
+        })
+        .catch((error) => {
+          throw new Error(error.statusText || error.message);
+        })
     )
 );
 
 export const signOutThunk = createAsyncThunk(
   "auth/" + SIGNOUT_ACTION,
-  async (_, thunkApi) =>
-    new Promise((resolve) =>
-      fake().then(() => {
-        thunkApi.dispatch(profileClear());
-        resolve();
-      })
-    )
+  async (_, thunkApi) => fake().then(() => thunkApi.dispatch(profileClear()))
 );
 
 export const getProfileThunk = createAsyncThunk(
   "profile/" + GET_ACTION,
   async (token = null, thunkApi) =>
-    new Promise((resolve, reject) =>
-      fake().then(() =>
-        fetchGetProfile(token ?? thunkApi.getState().auth.token)
-          .catch((error) => {
-            reject(error.statusText || error.message);
-            throw error;
-          })
-          .then((data) => {
-            thunkApi.dispatch(authUpdateFirstName(data.firstName));
-            resolve(data);
-          })
-      )
+    fake().then(() =>
+      fetchGetProfile(token ?? thunkApi.getState().auth.token)
+        .catch((error) => {
+          throw new Error(error.statusText || error.message);
+        })
+        .then((data) => {
+          thunkApi.dispatch(authUpdateFirstName(data.firstName));
+          return data;
+        })
     )
 );
 
 export const updateProfileThunk = createAsyncThunk(
   "profile/" + PUT_ACTION,
   async (profile, thunkApi) =>
-    new Promise((resolve, reject) =>
-      fake().then(() =>
-        fetchUpdateProfile(thunkApi.getState().auth.token, profile)
-          .catch((error) => reject(error.statusText || error.message))
-          .then((data) => {
-            thunkApi.dispatch(authUpdateFirstName(data.firstName));
-            resolve(data);
-          })
-      )
+    fake().then(() =>
+      fetchUpdateProfile(thunkApi.getState().auth.token, profile)
+        .catch((error) => {
+          throw new Error(error.statusText || error.message);
+        })
+        .then((data) => {
+          thunkApi.dispatch(authUpdateFirstName(data.firstName));
+          return data;
+        })
     )
 );
 

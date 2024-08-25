@@ -7,11 +7,13 @@ import {
 } from "../utils/consts";
 import { authSelector, profileSelector } from "./selectors";
 
-const unwrap = (state) => ({
+const unwrap = (state, extras = {}) => ({
+  ...state,
   isIdle: state.status === IDLE_STATUS,
   isPending: state.status === PENDING_STATUS,
   isError: state.status === ERROR_STATUS,
   isSuccess: state.status === SUCCESS_STATUS,
+  ...extras,
 });
 
 /**
@@ -21,11 +23,7 @@ const unwrap = (state) => ({
  */
 export const useAuthSelector = () => {
   const selector = useSelector(authSelector);
-  return {
-    ...selector,
-    isAuth: selector.token !== null,
-    ...unwrap(selector),
-  };
+  return unwrap(selector, { isAuth: selector.token !== null });
 };
 
 /**
@@ -35,14 +33,6 @@ export const useAuthSelector = () => {
  */
 export const useProfileSelector = () => {
   const selector = useSelector(profileSelector);
-  let timeLeft = null;
-  if (selector.expireAt !== null) {
-    timeLeft = selector.expireAt - Date.now();
-  }
-  return {
-    ...selector,
-    ...unwrap(selector),
-    expired: timeLeft !== null && timeLeft <= 0,
-    timeLeft: timeLeft,
-  };
+
+  return unwrap(selector);
 };

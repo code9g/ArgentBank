@@ -13,13 +13,12 @@ import { getProfileThunk, updateProfileThunk } from "../thunks";
 /**
  * Données initiales de l'état de connexion (profileSlice)
  *
- * @type {{ action: string | null; status: string | null;  error: string | null; expireAt: integer; user: {id: string?, createdAt: string?, updatedAt: string?, email: string?, firstName: string?, lastName: string?}}}
+ * @type {Object}}
  */
 const initialState = {
   action: null,
   status: IDLE_STATUS,
   error: null,
-  expireAt: null,
 
   user: {
     id: null,
@@ -79,14 +78,12 @@ export const profileSlice = createSlice({
         state.error = message;
       })
       .addCase(updateProfileThunk.pending, (state) => {
-        state.expireAt = null;
         state.action = PUT_ACTION;
         state.status = PENDING_STATUS;
         state.error = null;
       })
       .addCase(updateProfileThunk.fulfilled, (state, { payload: user }) => {
         state.error = null;
-        state.expireAt = Date.now() + INTERVAL_USER_DATA_REFRESH;
         state.status = SUCCESS_STATUS;
         state.user.id = user.id;
         state.user.createdAt = user.createdAt;
