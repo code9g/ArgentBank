@@ -1,5 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { INTERVAL_USER_DATA_REFRESH } from "../../utils/consts";
+import {
+  ERROR_STATUS,
+  GET_ACTION,
+  IDLE_STATUS,
+  INTERVAL_USER_DATA_REFRESH,
+  PENDING_STATUS,
+  PUT_ACTION,
+  SUCCESS_STATUS,
+} from "../../utils/consts";
+import { getProfileThunk, updateProfileThunk } from "../thunk";
 
 /**
  * Données initiales de l'état de connexion (profileSlice)
@@ -8,7 +17,7 @@ import { INTERVAL_USER_DATA_REFRESH } from "../../utils/consts";
  */
 const initialState = {
   action: null,
-  status: "iddle",
+  status: IDLE_STATUS,
   error: null,
   expireAt: null,
 
@@ -31,32 +40,12 @@ export const profileSlice = createSlice({
   name: "profile",
   initialState,
   reducers: {
-    profilePending: (state, { payload: action }) => {
-      state.expireAt = null;
-      state.action = action;
-      state.status = "pending";
+    profileClearError: (state) => {
+      state.status = IDLE_STATUS;
       state.error = null;
     },
-
-    profileSuccess: (state, { payload: user }) => {
-      state.error = null;
-      state.expireAt = Date.now() + INTERVAL_USER_DATA_REFRESH;
-      state.status = "success";
-      state.user.id = user.id;
-      state.user.createdAt = user.createdAt;
-      state.user.updatedAt = user.updatedAt;
-      state.user.email = user.email;
-      state.user.firstName = user.firstName;
-      state.user.lastName = user.lastName;
-    },
-
-    profileError: (state, { payload: error }) => {
-      state.status = "error";
-      state.error = error;
-    },
-
     profileClear: (state) => {
-      state.status = "iddle";
+      state.status = IDLE_STATUS;
       state.error = null;
       state.user.id = null;
       state.user.createdAt = null;
@@ -66,6 +55,50 @@ export const profileSlice = createSlice({
       state.user.lastName = null;
     },
   },
+  extraReducers: (builder) =>
+    builder
+      .addCase(getProfileThunk.pending, (state) => {
+        state.expireAt = null;
+        state.action = GET_ACTION;
+        state.status = PENDING_STATUS;
+        state.error = null;
+      })
+      .addCase(getProfileThunk.fulfilled, (state, { payload: user }) => {
+        state.error = null;
+        state.expireAt = Date.now() + INTERVAL_USER_DATA_REFRESH;
+        state.status = SUCCESS_STATUS;
+        state.user.id = user.id;
+        state.user.createdAt = user.createdAt;
+        state.user.updatedAt = user.updatedAt;
+        state.user.email = user.email;
+        state.user.firstName = user.firstName;
+        state.user.lastName = user.lastName;
+      })
+      .addCase(getProfileThunk.rejected, (state, { error: { message } }) => {
+        state.status = ERROR_STATUS;
+        state.error = message;
+      })
+      .addCase(updateProfileThunk.pending, (state) => {
+        state.expireAt = null;
+        state.action = PUT_ACTION;
+        state.status = PENDING_STATUS;
+        state.error = null;
+      })
+      .addCase(updateProfileThunk.fulfilled, (state, { payload: user }) => {
+        state.error = null;
+        state.expireAt = Date.now() + INTERVAL_USER_DATA_REFRESH;
+        state.status = SUCCESS_STATUS;
+        state.user.id = user.id;
+        state.user.createdAt = user.createdAt;
+        state.user.updatedAt = user.updatedAt;
+        state.user.email = user.email;
+        state.user.firstName = user.firstName;
+        state.user.lastName = user.lastName;
+      })
+      .addCase(updateProfileThunk.rejected, (state, { error: { message } }) => {
+        state.status = ERROR_STATUS;
+        state.error = message;
+      }),
 });
 
 /**
@@ -73,7 +106,6 @@ export const profileSlice = createSlice({
  *
  * @type {ActionCreator}
  */
-export const { profilePending, profileSuccess, profileError, profileClear } =
-  profileSlice.actions;
+export const { profileClear, profileClearError } = profileSlice.actions;
 
 export default profileSlice.reducer;

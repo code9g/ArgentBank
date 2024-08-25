@@ -3,8 +3,8 @@ import logo from "../assets/img/argentBankLogo.png";
 
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { signOut } from "../redux/actions";
 import { useAuthSelector } from "../redux/hooks";
+import { signOutThunk } from "../redux/thunk";
 import { promiseError } from "../utils/consts";
 
 function Header() {
@@ -14,8 +14,9 @@ function Header() {
 
   const logout = async (e) => {
     e.preventDefault();
+
     try {
-      await toast.promise(dispatch(signOut()), {
+      await toast.promise(dispatch(signOutThunk()).unwrap(), {
         pending: "Disconnecting...",
         success: "You are logged out",
         error: promiseError,

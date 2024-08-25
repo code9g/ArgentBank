@@ -5,8 +5,8 @@ import Account from "../components/Account";
 import Smoke from "../components/Smoke";
 import Title from "../components/Title";
 import UserHeader from "../components/UserHeader";
-import { getProfile } from "../redux/actions";
 import { useProfileSelector } from "../redux/hooks";
+import { getProfileThunk } from "../redux/thunk";
 import {
   accounts,
   INTERVAL_USER_DATA_REFRESH,
@@ -14,15 +14,15 @@ import {
 } from "../utils/consts";
 
 function User() {
-  const { isPending, timeLeft, status } = useProfileSelector();
+  const { isPending, timeLeft } = useProfileSelector();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (status !== "pending") {
+    if (!isPending) {
       let handle = null;
 
       const toastify = (text) => {
-        toast.promise(dispatch(getProfile()), {
+        toast.promise(dispatch(getProfileThunk()).unwrap(), {
           pending: text,
           success: "Your data has been retrieved",
           error: promiseError,
@@ -36,11 +36,12 @@ function User() {
       if (timeLeft > 0) {
         handle = setTimeout(timeoutTrigger, timeLeft);
       } else {
+        handle = null;
         timeoutTrigger();
       }
       return () => clearTimeout(handle);
     }
-  }, [timeLeft, dispatch, status]);
+  }, [timeLeft, dispatch, isPending]);
 
   return (
     <>

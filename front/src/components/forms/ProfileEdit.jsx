@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { updateProfile } from "../../redux/actions";
 import { useProfileSelector } from "../../redux/hooks";
-import { profileError } from "../../redux/slices/profileSlice";
+import { profileClearError } from "../../redux/slices/profileSlice";
+import { updateProfileThunk } from "../../redux/thunk";
 import { promiseError } from "../../utils/consts";
 
 function ProfileEdit({ close }) {
@@ -20,11 +20,11 @@ function ProfileEdit({ close }) {
     try {
       await toast.promise(
         dispatch(
-          updateProfile({
+          updateProfileThunk({
             firstName: e.target["firstName"].value,
             lastName: e.target["lastName"].value,
           })
-        ),
+        ).unwrap(),
         {
           pending: "Updating...",
           success: "Your profile has been successfully updated",
@@ -38,11 +38,11 @@ function ProfileEdit({ close }) {
   };
 
   const handleChange = () => {
-    dispatch(profileError(null));
+    dispatch(profileClearError());
   };
 
   const handleCancel = () => {
-    dispatch(profileError(null));
+    dispatch(profileClearError());
     close();
   };
 

@@ -2,13 +2,15 @@ import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { signIn } from "../../redux/actions";
 import { useAuthSelector } from "../../redux/hooks";
 import { authClearError } from "../../redux/slices/authSlice";
+import { signInThunk } from "../../redux/thunk";
+import { promiseError } from "../../utils/consts";
 import Smoke from "../Smoke";
 
 function SignIn({ to }) {
   const { isPending, isError, error } = useAuthSelector();
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -22,13 +24,14 @@ function SignIn({ to }) {
     const remember = e.target["remember"].checked;
 
     try {
-      await toast.promise(dispatch(signIn(credentials, remember)), {
-        pending: "Connecting...",
-        success: "Your are connected successfully !",
-        error: {
-          render: (error) => error.data.statusText || error.data.message,
-        },
-      });
+      await toast.promise(
+        dispatch(signInThunk({ credentials, remember })).unwrap(),
+        {
+          pending: "Connecting...",
+          success: "Your are connected successfully !",
+          error: promiseError,
+        }
+      );
       navigate(to);
     } catch (error) {
       // No report error

@@ -4,8 +4,10 @@ import {
   IDLE_STATUS,
   PENDING_STATUS,
   SIGNIN_ACTION,
+  SIGNOUT_ACTION,
   SUCCESS_STATUS,
 } from "../../utils/consts";
+import { signInThunk, signOutThunk } from "../thunk";
 
 /**
  * Données initiales de l'état de connexion (loginSlice)
@@ -42,33 +44,6 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    authPending: (state, { payload: action }) => {
-      state.action = action;
-      state.status = PENDING_STATUS;
-    },
-
-    authSuccess: (state, { payload }) => {
-      state.status = SUCCESS_STATUS;
-      if (payload) {
-        const { token, remember } = payload;
-        state.token = token;
-        state.remember = remember;
-        if (remember) {
-          localStorage.setItem("token", token);
-        }
-      } else {
-        localStorage.clear();
-        state.token = null;
-        state.remember = null;
-      }
-      state.error = null;
-    },
-
-    authError: (state, { payload: error }) => {
-      state.status = ERROR_STATUS;
-      state.error = error;
-    },
-
     authClearError: (state) => {
       state.status = IDLE_STATUS;
       state.error = null;
@@ -81,6 +56,47 @@ export const authSlice = createSlice({
       }
     },
   },
+  extraReducers: (builder) =>
+    builder
+      .addCase(signInThunk.pending, (state) => {
+        state.action = SIGNIN_ACTION;
+        state.status = PENDING_STATUS;
+      })
+      .addCase(signInThunk.fulfilled, (state, { payload }) => {
+        state.status = SUCCESS_STATUS;
+        if (payload) {
+          const { token, remember } = payload;
+          state.token = token;
+          state.remember = remember;
+          if (remember) {
+            localStorage.setItem("token", token);
+          }
+        } else {
+          localStorage.clear();
+          state.token = null;
+          state.remember = null;
+        }
+        state.error = null;
+      })
+      .addCase(signInThunk.rejected, (state, { error: { message } }) => {
+        state.status = ERROR_STATUS;
+        state.error = message;
+      })
+      .addCase(signOutThunk.pending, (state) => {
+        state.action = SIGNOUT_ACTION;
+        state.status = PENDING_STATUS;
+      })
+      .addCase(signOutThunk.fulfilled, (state) => {
+        state.status = SUCCESS_STATUS;
+        localStorage.clear();
+        state.token = null;
+        state.remember = null;
+        state.error = null;
+      })
+      .addCase(signOutThunk.rejected, (state, { error: { message } }) => {
+        state.status = ERROR_STATUS;
+        state.error = message;
+      }),
 });
 
 /**
@@ -88,13 +104,6 @@ export const authSlice = createSlice({
  *
  * @type {ActionCreator}
  */
-export const {
-  authAction,
-  authPending,
-  authSuccess,
-  authError,
-  authClearError,
-  authUpdateFirstName,
-} = authSlice.actions;
+export const { authClearError, authUpdateFirstName } = authSlice.actions;
 
 export default authSlice.reducer;
