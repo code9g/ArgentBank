@@ -385,16 +385,6 @@ body {
 .smoke {
   position: absolute;
   inset: 0;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
   background: transparent;
   z-index: 99;
-
-  &-content {
-    padding: 4rem;
-    background: white;
-    border: 2px solid $primary-color;
-  }
 }
