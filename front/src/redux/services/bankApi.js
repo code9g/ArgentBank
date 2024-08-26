@@ -54,6 +54,7 @@ export const bankApi = createApi({
       queryFn: async () => {
         return { status: 200, message: "User successfully disconnected" };
       },
+      invalidatesTags: ["Auth", "Profile"],
     }),
     getProfile: builder.mutation({
       query: (token = null) => ({
