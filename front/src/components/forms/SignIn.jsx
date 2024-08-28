@@ -8,11 +8,27 @@ import {
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { setRemember } from "../../redux/slices/authSlice";
-import Smoke from "../Smoke";
 
 function SignIn({ to }) {
-  const [login, { isPending, isError, error }] = useLoginMutation();
-  const [getProfile] = useGetProfileMutation();
+  const [
+    login,
+    { isLoading: isLoginLoading, isError: isLoginError, error: loginError },
+  ] = useLoginMutation();
+  const [
+    getProfile,
+    {
+      isLoading: isProfileLoading,
+      isError: isProfileError,
+      error: profileError,
+    },
+  ] = useGetProfileMutation();
+  const isLoading = isLoginLoading || isProfileLoading;
+  const isError = isLoginError || isProfileError;
+  const error = isLoginError
+    ? loginError
+    : isProfileError
+    ? profileError
+    : { message: "Unexpected error !" };
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -45,7 +61,7 @@ function SignIn({ to }) {
 
   return (
     <form name="sign-in" className="sign-in-form" onSubmit={handleSubmit}>
-      {isPending && <Smoke />}
+      {/* {isLoading && <Smoke />} */}
       <i className="fa fa-user-circle sign-in-icon"></i>
       <h1>Sign In</h1>
       <div className={`sign-in-error ${isError ? "show" : ""}`}>
@@ -53,11 +69,23 @@ function SignIn({ to }) {
       </div>
       <div className="input-text">
         <label htmlFor="username">Username</label>
-        <input type="text" id="username" minLength={2} required />
+        <input
+          type="text"
+          id="username"
+          minLength={2}
+          required
+          disabled={isLoading}
+        />
       </div>
       <div className="input-password">
         <label htmlFor="password">Password</label>
-        <input type="password" id="password" minLength={2} required />
+        <input
+          type="password"
+          id="password"
+          minLength={2}
+          required
+          disabled={isLoading}
+        />
       </div>
       <div className="input-checkbox">
         <input
@@ -66,10 +94,11 @@ function SignIn({ to }) {
           onChange={(e) => {
             dispatch(setRemember(e.currentTarget.checked));
           }}
+          disabled={isLoading}
         />
         <label htmlFor="remember">Remember me</label>
       </div>
-      <button type="submit" className="sign-in-button">
+      <button type="submit" className="sign-in-button" disabled={isLoading}>
         Sign In
       </button>
     </form>

@@ -7,7 +7,6 @@ function User() {
   return (
     <>
       <Title>User</Title>
-      {/* {isPending && <Smoke />} */}
       <main className="main bg-dark">
         <UserHeader />
         <h2 className="sr-only">Accounts</h2>
