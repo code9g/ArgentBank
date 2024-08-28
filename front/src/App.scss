@@ -394,9 +394,9 @@ body {
   color: #ffffffa0;
 }
 
-.smoke {
-  position: absolute;
-  inset: 0;
-  background: transparent;
-  z-index: 99;
+.Toastify__toast-container--top-center {
+  @media (max-width: 700px) {
+    top: unset;
+    bottom: 0;
+  }
 }

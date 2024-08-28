@@ -41,7 +41,6 @@ function ProfileEdit({ close }) {
 
   return (
     <form name="profile-edit" className="form-profile" onSubmit={handleSubmit}>
-      {/* {isLoading && <Smoke />} */}
       <div className="form-profile-grid">
         <input
           id="firstName"

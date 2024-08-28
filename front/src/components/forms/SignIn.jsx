@@ -1,34 +1,13 @@
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import {
-  useGetProfileMutation,
-  useLoginMutation,
-} from "../../redux/services/bankApi";
+import { useLoginMutation } from "../../redux/services/bankApi";
 
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { setRemember } from "../../redux/slices/authSlice";
 
 function SignIn({ to }) {
-  const [
-    login,
-    { isLoading: isLoginLoading, isError: isLoginError, error: loginError },
-  ] = useLoginMutation();
-  const [
-    getProfile,
-    {
-      isLoading: isProfileLoading,
-      isError: isProfileError,
-      error: profileError,
-    },
-  ] = useGetProfileMutation();
-  const isLoading = isLoginLoading || isProfileLoading;
-  const isError = isLoginError || isProfileError;
-  const error = isLoginError
-    ? loginError
-    : isProfileError
-    ? profileError
-    : { message: "Unexpected error !" };
+  const [login, { isLoading, isError, error }] = useLoginMutation();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -44,11 +23,7 @@ function SignIn({ to }) {
     toast.promise(
       login(credentials)
         .unwrap()
-        .then((token) =>
-          getProfile(token)
-            .unwrap()
-            .then(() => navigate(to))
-        ),
+        .then(() => navigate(to)),
       {
         pending: "Connecting...",
         success: "You are successfully logged...",
@@ -61,7 +36,6 @@ function SignIn({ to }) {
 
   return (
     <form name="sign-in" className="sign-in-form" onSubmit={handleSubmit}>
-      {/* {isLoading && <Smoke />} */}
       <i className="fa fa-user-circle sign-in-icon"></i>
       <h1>Sign In</h1>
       <div className={`sign-in-error ${isError ? "show" : ""}`}>
