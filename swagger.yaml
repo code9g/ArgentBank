@@ -175,8 +175,8 @@ paths:
         - Bearer: []
       tags:
         - Accounts module
-      summary: Get all transactions of an account
-      description: API for returns all transactions for an authenticated user's account
+      summary: Get all transactions of the month of an account
+      description: API for returns all transactions of the month for an authenticated user's account
       parameters:
         - in: path
           name: accountId
@@ -207,8 +207,8 @@ paths:
         - Bearer: []
       tags:
         - Transactions module
-      summary: Get all transactions
-      description: API for returns all transactions of an authenticated user
+      summary: Get all transactions of the month
+      description: API for returns all transactions of the month of an authenticated user
       parameters:
         - in: header
           type: string
