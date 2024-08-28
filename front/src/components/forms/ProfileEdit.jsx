@@ -2,12 +2,11 @@ import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 import { useAuthSelector } from "../../redux/hooks";
 import { useUpdateProfileMutation } from "../../redux/services/bankApi";
-import Smoke from "../Smoke";
 
 function ProfileEdit({ close }) {
   const { user } = useAuthSelector();
 
-  const [updateProfile, { isPending, isError, error }] =
+  const [updateProfile, { isLoading, isError, error }] =
     useUpdateProfileMutation();
 
   const handleSubmit = async (e) => {
@@ -42,24 +41,31 @@ function ProfileEdit({ close }) {
 
   return (
     <form name="profile-edit" className="form-profile" onSubmit={handleSubmit}>
-      {isPending && <Smoke />}
+      {/* {isLoading && <Smoke />} */}
       <div className="form-profile-grid">
         <input
           id="firstName"
           className="input-firstname"
           type="text"
           placeholder={user?.firstName}
+          disabled={isLoading}
         />
         <input
           id="lastName"
           className="input-lastname"
           type="text"
           placeholder={user?.lastName}
+          disabled={isLoading}
         />
-        <button className="save-button" type="submit">
+        <button className="save-button" type="submit" disabled={isLoading}>
           Save
         </button>
-        <button className="cancel-button" type="button" onClick={close}>
+        <button
+          className="cancel-button"
+          type="button"
+          disabled={isLoading}
+          onClick={close}
+        >
           Cancel
         </button>
       </div>
