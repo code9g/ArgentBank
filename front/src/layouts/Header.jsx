@@ -1,5 +1,5 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import logo from "../assets/img/argentBankLogo.png";
+import logo from "../assets/img/logo.png";
 
 import { toast } from "react-toastify";
 import { useAuthSelector } from "../redux/hooks";
