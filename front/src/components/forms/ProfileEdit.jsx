@@ -18,6 +18,14 @@ function ProfileEdit({ close }) {
       lastName: target["lastName"].value,
     };
 
+    if (profile.firstName == "") {
+      profile.firstName = user?.firstName;
+    }
+
+    if (profile.lastName == "") {
+      profile.lastName = user?.lastName;
+    }
+
     toast.promise(
       updateProfile(profile)
         .unwrap()
@@ -41,18 +49,12 @@ function ProfileEdit({ close }) {
           className="input-firstname"
           type="text"
           placeholder={user?.firstName}
-          defaultValue={user?.firstName}
-          minLength={2}
-          required
         />
         <input
           id="lastName"
           className="input-lastname"
           type="text"
           placeholder={user?.lastName}
-          defaultValue={user?.lastName}
-          minLength={2}
-          required
         />
         <button className="save-button" type="submit">
           Save
