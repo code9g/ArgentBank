@@ -42,13 +42,39 @@ export const bankApi = createApi({
   tagTypes: ["Auth", "Profile"],
   endpoints: (builder) => ({
     login: builder.mutation({
-      query: ({ email, password }) => ({
-        url: LOGIN_ENDPOINT,
-        method: "POST",
-        body: { email, password },
-      }),
-      transformResponse: (response) => response.body.token,
-      transformErrorResponse: customTransformResponse(LOGIN_ENDPOINT, "POST"),
+      queryFn: async (credentials, _queryApi, _extraOptions, baseQuery) => {
+        const loginResponse = await baseQuery({
+          url: LOGIN_ENDPOINT,
+          method: "POST",
+          body: credentials,
+        });
+        if (loginResponse.error)
+          return {
+            error: customTransformResponse(
+              LOGIN_ENDPOINT,
+              "POST"
+            )(loginResponse.error),
+          };
+        const token = loginResponse.data?.body.token;
+        const profileResponse = await baseQuery({
+          url: PROFILE_ENDPOINT,
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        if (profileResponse.error)
+          return {
+            error: customTransformResponse(
+              PROFILE_ENDPOINT,
+              "POST"
+            )(profileResponse.error),
+          };
+        return {
+          data: { token, user: profileResponse.data.body },
+        };
+      },
       providesTags: ["Auth"],
     }),
     logout: builder.mutation({

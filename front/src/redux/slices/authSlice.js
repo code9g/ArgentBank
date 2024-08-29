@@ -43,8 +43,9 @@ export const authSlice = createSlice({
 
       .addMatcher(
         bankApi.endpoints.login.matchFulfilled,
-        (state, { payload: token }) => {
+        (state, { payload: { token, user } }) => {
           state.token = token;
+          state.user = user;
           if (state.remember) {
             localStorage.setItem("token", token);
           }
