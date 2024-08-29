@@ -23,7 +23,9 @@ function SignIn({ to }) {
     toast.promise(
       login(credentials)
         .unwrap()
-        .then(() => navigate(to)),
+        .then(() => {
+          navigate(to);
+        }),
       {
         pending: "Connecting...",
         success: "You are successfully logged...",
