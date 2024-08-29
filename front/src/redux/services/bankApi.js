@@ -75,7 +75,7 @@ export const bankApi = createApi({
           data: { token, user: profileResponse.data.body },
         };
       },
-      providesTags: ["Auth"],
+      providesTags: ["Auth", "Profile"],
     }),
     logout: builder.mutation({
       queryFn: async () => {
