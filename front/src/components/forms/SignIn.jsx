@@ -1,12 +1,14 @@
 import PropTypes from "prop-types";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../redux/services/bankApi";
 
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import { useAuthSelector } from "../../redux/hooks";
 import { setRemember } from "../../redux/slices/authSlice";
 
 function SignIn({ to }) {
+  const { isAuth } = useAuthSelector();
   const [login, { isLoading, isError, error }] = useLoginMutation();
 
   const dispatch = useDispatch();
@@ -33,6 +35,10 @@ function SignIn({ to }) {
       }
     );
   };
+
+  if (isAuth) {
+    return <Navigate to={to} />;
+  }
 
   return (
     <form name="sign-in" className="sign-in-form" onSubmit={handleSubmit}>
