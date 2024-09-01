@@ -19,8 +19,8 @@ const routes = createRoutesFromElements(
   <Route path="/" element={<Layout />}>
     <Route errorElement={<Error />}>
       <Route index element={<Home />} />
-      <Route path="sign-in" element={<LogIn />} />
-      <Route path="user" element={<Private />}>
+      <Route path="sign-in" element={<LogIn to="/user" />} />
+      <Route path="user" element={<Private signIn="/sign-in" />}>
         <Route index element={<User />} />
       </Route>
       <Route path="*" element={<NotFound />} />

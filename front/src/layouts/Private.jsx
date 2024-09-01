@@ -2,13 +2,13 @@ import PropTypes from "prop-types";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuthSelector } from "../redux/hooks";
 
-function Private() {
+function Private({ signIn }) {
   const { isAuth } = useAuthSelector();
-  return isAuth ? <Outlet /> : <Navigate to="/sign-in" replace={true} />;
+  return isAuth ? <Outlet /> : <Navigate to={signIn} replace={true} />;
 }
 
 Private.propTypes = {
-  to: PropTypes.string,
+  signIn: PropTypes.string,
 };
 
 export default Private;
